@@ -17,10 +17,14 @@
                     <div class="page_title_container">
                         <h4>Update profile</h4>
                     </div>
-                    
-
+                    {% if messages %}                                                                      				 	
+                        <ul class="messages">                                           								
+                            {% for message in messages %}                                       							
+                                <li class="errors">{{ message }}</li>       									
+                            {% endfor %}   
+                    {% endif %}
                     <div class="update_profile_container">
-                        <form action="/update_profile/{{cur_user.id}}" method="post"  enctype="multipart/form-data">
+                        <form action="/update_profile/{{cur_user.id}}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="first_name">First Name:</label>
@@ -31,22 +35,25 @@
                                 <input type="text" name="last_name" class="form-control" id="last_name" value = "{{cur_user.last_name}}">
                             </div>
                             <div class="form-group">
-                                <label for="birth_date">Birthdate:</label>
-                                <input type="date" name="birth_date" class="form-control" id="birth_date" value = "{{cur_user.birth_date}}">
-                            </div>
-                            <div class="form-group">
                                 <label for="email">Email:</label>
                                 <input type="text" name="email" class="form-control" id="email" value = "{{cur_user.email}}">
                             </div>
                             <div class="form-group">
+                                <label for="birth_date">Birthdate:</label>
+                                <input type="date" name="birth_date" class="form-control" id="birth_date" value = "{{cur_user.birth_date}}">
+                            </div>
+                            <div class="form-group">
                                 <label for="phone_num">Phone:</label>
-                                <input type="number" name="phone_num" class="form-control" id="phone_num" value = "{{cur_user.phone_num}}">
+                                <input type="tel" name="phone_num" class="form-control" id="phone_num" value = "{{cur_user.phone_num}}">
                             </div>
                             <div class="form-group">
                                 <label for="avatar">Avatar:</label>
                                 <input type="file" name="avatar" class="form-control" id="avatar" >
                             </div>
-   
+                            <div class="form-group">
+                              <label for="about">About Me:</label>
+                              <textarea class="form-control" name="about" id="about" rows="6">{{cur_user.about}}</textarea>
+                            </div>
                             <div class="button_form">
                                 <button class="mybutton btn btn-info">Update</button>
                             </div>

@@ -16,7 +16,7 @@
             <div class="cur_user_name_container">
                 <p><a href="/user/{{ cur_user.id }}/profile">{{ cur_user.first_name }}</a></p>
             </div>
-            <div class="cur_user_photo_container">
+            <div class="cur_user_photo_container">   
                 <a href="/user/{{ cur_user.id }}/profile"><img src="{{ MEDIA_URL }}{{ cur_user.avatar }}" alt="avatar"></a>
             </div>
             {% endif %}

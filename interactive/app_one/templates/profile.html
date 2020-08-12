@@ -42,7 +42,7 @@
                         </div>
                         <div class="about_user">
                             <h5>About:</h5>
-                            {% if len.user.about > 0 %}
+                            {% if user.about|length > 0 %}
                             <p>{{ user.about}}</p>
                             {% else %}
                             <p class="no_provided">No provided information</p>

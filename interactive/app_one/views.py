@@ -11,8 +11,8 @@ from django.forms.models import model_to_dict # Need for sortation
 def index(request):
     return redirect('/login')
 
-def login(request):
-    return render(request, 'login.html')
+# def login(request):
+#     return render(request, 'login.html')
 
 def dashboard(request):
     context = {
@@ -38,6 +38,15 @@ def update_profile(request, user_id):
             'cur_user': User.objects.get(id = user_id)
         }
         return render(request, 'update_profile.html', context)
+    else:
+        errors = User.objects.validator(request.POST, user_id)	
+        if len(errors)>0:													
+            for value in errors.values():											
+                messages.error(request, value)											
+            return redirect(f'/update_profile/{user_id}')
+
+        updated_user = User.objects.update(user_id, request.POST, request.FILES)
+        return redirect(f'/user/{user_id}/profile')
 
 
 
@@ -49,7 +58,6 @@ def create_user(request):
         request.session.clear()
         request.session['first_name'] = request.POST['first_name']
         request.session['last_name'] = request.POST['last_name']
-        request.session['birth_date'] = request.POST['birth_date']
         request.session['email'] = request.POST['email']
         errors = User.objects.validator(request.POST)	
         if len(errors)>0:													
