@@ -67,3 +67,18 @@ function updateScroll(){
     element.scrollTop = element.scrollHeight;
 }
 updateScroll()
+
+
+
+// Emoji
+var input = document.querySelector('#content');
+var emoji_btn = document.querySelector('#add_emoji');
+var picker = new EmojiButton({
+    position: 'right-end' 
+})
+picker.on('emoji', function(emoji){
+    input.value += emoji;
+})
+emoji_btn.addEventListener('click', function(){
+    picker.pickerVisible ? picker.hidePicker() : picker.showPicker(emoji_btn);
+})

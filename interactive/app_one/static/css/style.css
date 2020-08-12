@@ -643,14 +643,14 @@ li {
           align-items: flex-end;
 }
 
+.chat_form_container .chat_form #content {
+  width: 100%;
+}
+
 .chat_form_container .chat_form #send_message_icon {
   background: none;
   padding: 0px;
   border: none;
-}
-
-.chat_form_container .chat_form #send_message_icon input {
-  width: 100%;
 }
 
 .chat_form_container .chat_form #send_message_icon ion-icon {

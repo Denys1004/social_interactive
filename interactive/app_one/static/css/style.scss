@@ -556,13 +556,13 @@ li{
     .chat_form{
         display: flex;
         align-items: flex-end;
+        #content{
+            width: 100%;
+        }
         #send_message_icon{
             background: none;
             padding: 0px;
             border: none;
-            input{
-                width: 100%;
-            }
             ion-icon {
                 padding-left: 10px;
                 font-size: 24px;
