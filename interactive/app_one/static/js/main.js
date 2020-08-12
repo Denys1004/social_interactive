@@ -26,23 +26,7 @@ $('#cancel_post_btn').click(function(){
 
 
 
-
-$('.show_comments').click(function(){
-    let pContent=$(this).html()
-    let post_id = $(this).attr('post_id')
-
-    if(pContent == 'Hide comments'){
-        $(this).html('Show comments...')
-        $(`.${post_id}display`).hide()
-    }
-    else{
-        $(this).html('Hide comments')
-        $(`.${post_id}display`).show()
-    }
-})
-
-
-
+// Add Comment to post
 $(".comment_container").on('submit', '.comment_form', function(e){
     e.preventDefault();
     let post_id = $(this).attr('post_id')
@@ -59,3 +43,27 @@ $(".comment_container").on('submit', '.comment_form', function(e){
         thisForm[0].reset();
     })
 })
+
+
+// Show Comments on the post
+$('.show_comments').click(function(){
+    let pContent=$(this).html()
+    let post_id = $(this).attr('post_id')
+
+    if(pContent == 'Hide comments'){
+        $(this).html('Show comments...')
+        $(`.${post_id}display`).hide()
+    }
+    else{
+        $(this).html('Hide comments')
+        $(`.${post_id}display`).show()
+    }
+})
+
+
+// Chat keep scrolled down
+function updateScroll(){
+    var element = document.getElementById("chat_container");
+    element.scrollTop = element.scrollHeight;
+}
+updateScroll()

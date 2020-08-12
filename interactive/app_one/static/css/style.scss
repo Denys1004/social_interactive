@@ -40,52 +40,64 @@ li{
     width: 100%;
     height: 70px;
     background-color: $button_color;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    .form_container{
-        .search_bar1{
-            outline: none;
-            border: none;
-            min-width: 31rem;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-        .search_bar1_btn{
-            padding: 0;
-            font-size: 12px;
-            padding: 2px 6px;
-            letter-spacing: 0.4px;
-        }
-    }
     #search_bar{
-        width: 94%;
+        width: 900px;
+        height: 70px;
+        margin: 0 auto;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: auto;
-        padding: 5px 10px;
         .logo_container{
+            flex:1;
             color: $white;
             .logotip{
                 font-weight: 900;
             }
-            
         }
-        .current_user_container{
-            display: flex;
-            align-items: center;
-            p{
-                margin-right: 10px;
-                a{
-                    color: $white;
+        .form_search_container{
+            flex:3;
+            .form_items{
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                form{
+                    .search_bar1{
+                        outline: none;
+                        border: none;
+                        min-width: 300px;
+                        border-radius: 5px;
+                        margin-right: 10px;
+                    }
+                    .search_bar1_btn{
+                        padding: 0;
+                        font-size: 12px;
+                        padding: 2px 6px;
+                        letter-spacing: 0.4px;
+                    }
                 }
             }
-            img{
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                object-fit: cover;
+
+        }
+        .current_user_container{
+            flex:1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            .cur_user_name_container{
+                margin-right: 10px;
+                p{
+                    a{
+                        color: $white;
+                    }
+                }
+            }
+            .cur_user_photo_container{
+                img{
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
             }
         }
     }
@@ -496,7 +508,7 @@ li{
 }
 
 // Chat Page
-.chat_container{
+#chat_container{
     padding: 0 10px;
     min-height: 65vh;
     max-height: 73vh;
