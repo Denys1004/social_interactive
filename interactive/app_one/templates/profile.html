@@ -1,0 +1,205 @@
+{% load embed_video_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Profile</title>
+</head>
+<body>
+    <div class="outer_container">
+        {% include 'search.html' %}
+
+        <div class="inner_container">
+            <div class="inner">
+                {% include 'navbar.html' %}
+    
+                <div class="main_container">
+                    <div class="page_title_container">
+                        <h4>{{user.first_name}}'s profile</h4>
+                    </div>
+                    
+
+                    <div class="profile_page_container">
+                        <div class="avatar_img">
+                            <div class="box">
+                                <img src="{{ MEDIA_URL }}{{ user.avatar }}" alt="{{ post.poster.first_name}}'s avatar">
+                                {% if cur_user.id != user.id %}
+                                <a href="/send_to/{{user.id}}" class="send_mess_btn">Send Message to {{user.first_name}}</a>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="profile_info">
+                                <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                                <p>Birthday: {{ user.birth_date|date:'N d, Y' }}</p>
+                                <p>Email: {{ user.email}}</p>
+                                <p>Phone: {{ user.phone_num}}</p>
+                                {% if user.id == cur_user.id %}
+                                <div class="update_profile_btn_container">
+                                    <a href="/update_profile/{{ user.id }}" class="update_profile_btn">Update Profile</a>
+                                </div>
+                                {% endif%}
+                            </div>
+                        </div>
+                        <div class="about_user">
+                            <h5>About:</h5>
+                            {% if len.user.about > 0 %}
+                            <p>{{ user.about}}</p>
+                            {% else %}
+                            <p class="no_provided">No provided information</p>
+                            {% endif %}
+                        </div>
+                        
+                        {% if user.id == request.session.user_id %}
+                            <div id="user_post_info">
+                                <div class="avatar">
+                                    <a href="/user/{{ user.id }}/profile"><img src="{{ MEDIA_URL }}{{ user.avatar }}" alt="{{ post.poster.first_name}}'s avatar"></a>
+                                </div>
+                                <div class="which_form">
+                                    <p id ='text_post_btn'>Add Text Post</p>
+                                    <p class="devider"> | </p>
+                                    <p id ='image_post_btn'>Add Image Post</p>
+                                    <p class="devider"> | </p>
+                                    <p id ='video_post_btn'>Add Video Post</p>
+                                    <p class="devider"> | </p>
+                                    <p id ='cancel_post_btn'>Cancel</p>
+                                </div>
+                            </div>
+
+                            <!-- text_post -->
+                            <div id="text_post">
+                                <form action="/create_new_text_post" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="content">Post:</label>
+                                        <textarea name="editor1" class="form-control post_content"></textarea>
+                                    </div>
+                                    <button class="btn btn-info">Post</button>
+                                </form>
+                            </div>
+                    
+                            <!-- image_post -->
+                            <div id="image_post">
+                                <form action="/create_new_image_post" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="content">Description:</label>
+                                        <input type="text" name="content" class="form-control" class="post_content">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="files">Files:</label>
+                                        <input type="file" id="files" class="form-control" name="files">
+                                    </div>
+                                    <button class="btn btn-info">Post</button>
+                                </form>
+                            </div>
+                            <!-- video_post -->
+                            <div id="video_post">
+                                <form action="/create_new_video_post" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="content">Description:</label>
+                                        <input type="text" name="content" class="form-control" class="post_content" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="video_item">Video URL:</label>
+                                        <input type="url" name="video_item" class="form-control" id="video_item">
+                                    </div>
+                                    <button class="btn btn-info">Post</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                
+                
+                    
+                        <br>
+                        <h5 class="text-center">All {{user.first_name}}'s Posts</h5>
+                        <!-- if user doesn't have posts display this:-->
+                        {% if not user.poster.all  %}
+                        <p class="no_provided text-center">{{ user.first_name }} doesn't have posts yet</p>
+                        {% endif %}
+                        
+                        
+      
+                        {% for post in user_posts %}
+                            <div class="post_container">
+                                <div class="post_header">
+                                    <div class="avatar">
+                                        <a href="/user/{{ post.poster.id }}/profile" ><img src="{{ MEDIA_URL }}{{ post.poster.avatar }}" alt="{{ post.poster.first_name}}'s avatar"></a>
+                                    </div>
+                                    <div class="poster">
+                                        <a href="/user/{{ post.poster.id }}/profile" class="poster_name">{{ post.poster.first_name }} {{ post.poster.last_name }}</a>
+                                        <small>{{ post.created_at }}</small>
+                                    </div>
+                                </div>
+
+                                {% if post.title %}
+                                    <h3 class="post_title">{{ post.title }}</h3>
+                                {% endif %}
+                                <p class="post_content">{{ post.content|safe }}</p>
+
+                                <!-- if post has video, display this: -->
+                                {% for i in post.videos.all %}
+                                <div class="one_video_container">			
+                                    {% video i.video '520x300' %}		
+                                </div>
+                                {% endfor %}
+
+                                <!-- if post has an image, display this: -->
+                                {% if post.post_image %}
+                                <div class="post_image_container">
+                                    <img src="{{ MEDIA_URL }}{{ post.post_image }}" alt="">
+                                </div>
+                                {% endif %}
+                    
+
+                                <div class="comment_container">
+                                    <form action="/add_comment/post/{{ post.id }}" class="comment_form" method="POST" post_id="{{post.id}}">
+                                        {% csrf_token %}
+                                        <div class="comment_input">
+                                            <div class="add_comment_input">
+                                                <input type="text" name="comment" placeholder="write a comment">
+                                            </div>
+                                            <input type="hidden" name="post_id" value="{{post.id}}">
+                                            <button class="btn btn-outline-info btn_add" >Add</button>
+                                        </div>
+                                    </form>
+
+                                    <!-- if post has comments show this: -->
+                                    {% if post.comments.all %}
+                                    <p post_id="{{post.id}}" class="show_comments {{post.id}}paragraph">Show comments...</p>
+                                    {% endif %}
+
+                                    <div class="display_comments_container {{post.id}}display">
+                                        {% for comment in post.comments.all %}
+                                        <div class="display_comment">
+                                            <div class="comment_poster_photo">
+                                                <a href="/user/{{ comment.poster.id }}/profile"><img src="{{ MEDIA_URL }}{{ comment.poster.avatar }}" alt=""></a>
+                                            </div>
+                                            <div class="comment_content">
+                                                <a class="comment_poster" href="">{{ comment.poster.first_name }} {{ comment.poster.last_name }}</a>
+                                                <p class="comment_text">{{ comment.comment }}</p>
+                                                <small>{{ comment.created_at }}</small>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        {% endfor %}
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        
+                    </div>
+    
+                </div>
+    
+                {% include 'sidebar.html' %}
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </div>
+</body>
+</html>

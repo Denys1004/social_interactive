@@ -1,0 +1,11 @@
+<div id="sidebar_container">
+    <ul>
+        <li>
+            {% if request.session.user_id != null %}
+            <a href="/logout">Logout <ion-icon name="arrow-undo"></ion-icon></a>
+            {% else %}
+            <a href="/login">Login</a>
+            {% endif %}
+        </li>  
+    </ul>
+</div>

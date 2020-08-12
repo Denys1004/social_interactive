@@ -1,0 +1,67 @@
+{% load embed_video_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Profile</title>
+</head>
+<body>
+    <div class="outer_container">
+        {% include 'search.html' %}
+
+        <div class="inner_container">
+            <div class="inner">
+                {% include 'navbar.html' %}
+    
+                <div class="main_container">
+                    <div class="page_title_container">
+                        <h4>Update profile</h4>
+                    </div>
+                    
+
+                    <div class="update_profile_container">
+                        <form action="/update_profile/{{cur_user.id}}" method="post"  enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="first_name">First Name:</label>
+                                <input type="text" name="first_name" class="form-control" id="first_name" value = "{{request.session.first_name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Last Name:</label>
+                                <input type="text" name="last_name" class="form-control" id="last_name" value = "{{request.session.last_name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="birth_date">Birthdate:</label>
+                                <input type="date" name="birth_date" class="form-control" id="birth_date" value = "{{request.session.birth_date}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="text" name="email" class="form-control" id="email" value = "{{request.session.email}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="avatar">Avatar:</label>
+                                <input type="file" name="avatar" class="form-control" id="avatar" >
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" name="password" class="form-control" id="password">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm_password">Confirm Password:</label>
+                                <input type="password" name="confirm_password" class="form-control" id="confirm_password">
+                            </div>
+                            <div class="button_form">
+                                <button class="mybutton btn btn-info">Sign Up</button>
+                            </div>
+                        </form>
+                    </div>
+    
+                </div>
+    
+                {% include 'sidebar.html' %}
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </div>
+</body>
+</html>

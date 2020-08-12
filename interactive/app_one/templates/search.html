@@ -1,0 +1,19 @@
+<div id="search_bar_container">
+    <div id="search_bar">
+        <div class="logo_container">
+            <h1 class="logotip">int</h1>
+        </div>
+        <div class="form_container">
+            <form action="" method="post" class="form-inline">
+                <input class="search_bar1" type="search" name="" id="">
+                <button class="btn btn-outline-light search_bar1_btn" type="submit">Search</button>
+            </form>
+        </div>
+        <div class="current_user_container">
+            {% if request.session.user_id != null %}
+            <p><a href="/user/{{ cur_user.id }}/profile">{{ cur_user.first_name }}</a></p>
+            <a href="/user/{{ cur_user.id }}/profile"><img src="{{ MEDIA_URL }}{{ cur_user.avatar }}" alt="avatar"></a>
+            {% endif %}
+        </div>
+    </div>
+</div>

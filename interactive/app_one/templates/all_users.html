@@ -1,0 +1,59 @@
+{% load embed_video_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Profile</title>
+</head>
+<body>
+    <div class="outer_container">
+        {% include 'search.html' %}
+
+        <div class="inner_container">
+            <div class="inner">
+                {% include 'navbar.html' %}
+    
+                <div class="main_container">
+                    <div class="page_title_container">
+                        <h4>All Users</h4>
+                    </div>
+                    <div class="search_user_container">
+                        <form action="" method="GET" class="form-inline">
+                            <input class="search_bar2" type="search" name="" id="" placeholder="name or lastname">
+                            <button class="btn btn-outline-info search_bar2_btn" type="submit">Search</button>
+                        </form>
+                    </div>
+                    
+
+                    <div class="all_users_container">
+                        {% for user in all_users %}
+                        <div class="one_user_container">
+
+                            <div class="one_user_photo">
+                                <a href="/user/{{ user.id }}/profile" ><img src="{{ MEDIA_URL }}{{ user.avatar }}" alt="{{ user.first_name}}'s avatar"></a>
+                            </div>
+                            <div class="one_user_name_container">
+                                <div class="one_user_name">
+                                    <a href="/user/{{ user.id }}/profile" class="user_name">{{ user.first_name }} {{ user.last_name }}</a>
+                                </div>
+                                <div class="one_user_message">
+                                    <a href="/user/{{ user.id }}/profile" class="user_name">write message</a>
+                                </div>
+                            </div>
+
+          
+                        </div>
+                        <hr class="devider_users">
+
+                        {% endfor %}
+                    </div>
+    
+                </div>
+    
+                {% include 'sidebar.html' %}
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </div>
+</body>
+</html>

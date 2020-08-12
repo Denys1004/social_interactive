@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="outer_container">
+        {% include 'search.html' %}
+
+        <div class="inner_container">
+            <div class="inner">
+    
+                <div class="main_container">
+                    <div class="page_title_container">
+                        <h4>Sign In</h4>
+                    </div>
+                    <div class="signin_container">
+                        {% if messages %}                                                                      				 	
+                        <ul class="messages">                                           								
+                            {% for message in messages %}                                       							
+                                <li class="errors">{{ message }}</li>       									
+                            {% endfor %}                                                								
+                        </ul>                                                      									
+                        {% endif %} 
+                        <form action="/login" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="text" name="email" class="form-control" id="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" name="password" class="form-control" id="password">
+                            </div>
+                            <div class="button_form">
+                                <button class="mybutton btn btn-info">Sign In</button>
+                            </div>
+                        </form>
+                        <br>
+                        <p>New User? You may sign up <a class="green" class='mybutton' href="/register">here...</a></p>
+                    </div>
+
+                </div>
+    
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </div>
+</body>
+</html>

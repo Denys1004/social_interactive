@@ -1,0 +1,66 @@
+{% load embed_video_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Profile</title>
+</head>
+<body>
+    <div class="outer_container">
+        {% include 'search.html' %}
+
+        <div class="inner_container">
+            <div class="inner">
+                {% include 'navbar.html' %}
+    
+                <div class="message_container">
+                    <div class="main_container">
+                        <div class="page_title_container">
+                            <h4>Chat</h4>
+                        </div>
+
+
+                        <div class="chat_container">
+                            {% for message in conversation.messages.all %}
+                                <div class="chat_message_container">
+                                    <div class="chat_message">
+                                        <div class="chat_avatar">
+                                            <a href="/user/{{ message.poster.id }}/profile" ><img src="{{ MEDIA_URL }}{{ message.poster.avatar }}" alt=""></a>
+                                        </div>
+                                        <div class="chat_content_container">
+                                            <div class="chat_content_header">
+                                                <a href="/user/{{ message.poster.id }}/profile">{{message.poster.first_name}} {{message.poster.last_name}}</a>
+                                                <small>{{ message.created_at|date:'Nd, g:i a' }}</small>
+                                            </div>
+                                            <div class="chat_content_body">
+                                                <p>{{ message.content }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="chat_form_container">
+                            <form action="/chat/{{conversation.id}}/{{receiver.id}}" method="post" class="chat_form">
+                                {% csrf_token %}
+                                <input type="text" name="content" class="form-control" id="content" placeholder="Message...">
+                                <button type="submit" id="send_message_icon">
+                                    <ion-icon name="send"><input type="submit"></ion-icon>
+                                </button>
+                                    
+                     
+                            </form>
+                        </div>
+                    </div>
+
+
+
+                </div>
+    
+                {% include 'sidebar.html' %}
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </div>
+</body>
+</html>
