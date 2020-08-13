@@ -110,7 +110,7 @@ class User(models.Model):
     last_name = models.CharField(max_length = 255)
     nickname = 	models.CharField(max_length = 50, blank=True, null = True)		
     initials = 	models.CharField(max_length = 10, blank=True, null = True)						
-    birth_date = models.DateTimeField(null=True)	
+    birth_date = models.DateField(null=True)	
     avatar = models.ImageField(upload_to='avatars', default='avatars/no_avatar.png')	#upload to avatars is a directory inside media directory, it will go like media/avatars								
     email = models.TextField()
     has_message = models.IntegerField(default=0)
@@ -125,7 +125,6 @@ class User(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 class Post(models.Model):
-    title = models.CharField(max_length = 255, null = True, blank=True, default=None)
     content = models.TextField()
     post_image = models.ImageField(upload_to='post_images', default=None, blank=True, null = True)
     poster = models.ForeignKey(User, related_name = 'poster', on_delete=models.CASCADE)
