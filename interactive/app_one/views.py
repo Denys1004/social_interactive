@@ -7,11 +7,10 @@ from django.core.paginator import Paginator
 
 from django.forms.models import model_to_dict
 
-# Create your views here.
+#User functions_____________________________________________________________________________________________________________________#
 def index(request):
     return redirect('/login')
 
-# REGISTRATION
 def create_user(request):
     if request.method == "GET":
         return render(request, "register.html")
@@ -33,7 +32,6 @@ def create_user(request):
         request.session['initials'] = new_user.first_name[0] + new_user.last_name[0]
         return redirect('/dashboard')
 
-# LOGIN
 def login(request):
     if request.method == "GET":
         request.session.clear()
@@ -46,22 +44,12 @@ def login(request):
         else:
             user = User.objects.get(email = request.POST['email'])
             request.session['user_id'] = user.id
-            request.session['initials'] = new_user.first_name[0] + new_user.last_name[0]
+            request.session['initials'] = user.first_name[0] + user.last_name[0]
             return redirect('/dashboard')
 
-# LOGOUT
 def logout(request):
     request.session.clear()
     return redirect("/login")    
-#___________________________________________________________________________________________________________________________________#
-
-def dashboard(request):
-    context = {
-        'cur_user': User.objects.get(id = request.session['user_id']),
-        'posts': Post.objects.all().order_by('-created_at'),
-        'videos': Video_item.objects.all()
-    }
-    return render(request, 'dashboard.html', context)
 
 def user_profile(request, user_id):
     needed_user = User.objects.get(id=user_id)
@@ -91,7 +79,23 @@ def update_profile(request, user_id):
         updated_user = User.objects.update(user_id, request.POST, request.FILES)
         return redirect(f'/user/{user_id}/profile')
 
-# CREATE NEW IMAGE POST
+#Independent Pages__________________________________________________________________________________________________________________#
+def dashboard(request):
+    context = {
+        'cur_user': User.objects.get(id = request.session['user_id']),
+        'posts': Post.objects.all().order_by('-created_at'),
+        'videos': Video_item.objects.all()
+    }
+    return render(request, 'dashboard.html', context)
+
+def all_friends(request):
+    context = {
+        'all_users': User.objects.all(),
+        'cur_user': User.objects.get(id = request.session['user_id'])
+    }
+    return render(request, 'all_users.html', context)
+
+#Posts______________________________________________________________________________________________________________________________#
 def create_new_image_post(request):
     if request.method == "GET":
         context = {
@@ -104,7 +108,6 @@ def create_new_image_post(request):
         new_post = Post.objects.create_image_post(request.POST, request.FILES, poster)
         return redirect('/dashboard')
 
-# CREATE NEW VIDEO POST
 def create_new_video_post(request):
     if request.method == "GET":
         context = {
@@ -118,7 +121,6 @@ def create_new_video_post(request):
         new_video = Video_item.objects.create(video = request.POST['video_item'], post = new_post, video_poster = poster )
         return redirect('/dashboard')
 
-# CREATE NEW Text POST
 def create_new_text_post(request):
     if request.method == "GET":
         context = {
@@ -150,6 +152,7 @@ def post_comment_with_ajax(request):
     }
     return render(request, 'comments_partial.html', context)
 
+#Conversation functions_____________________________________________________________________________________________________________#
 def send_message(request, user_id):
     receiver = User.objects.get(id = user_id)
     sender = User.objects.get(id = request.session['user_id'])
@@ -172,9 +175,6 @@ def send_message(request, user_id):
 
         #create new message
         new_message = Message.objects.create(content = request.POST['content'],poster = sender, conversation=needed_conversation)
-        receiver.has_message += 1
-        receiver.save()
-
         needed_conversation.title = new_message.content
         needed_conversation.save()
 
@@ -189,15 +189,11 @@ def display_messages(request):
     }
     return render(request, 'display_conversations.html', context)
 
-
 def chat(request, conv_id, receiver_id):
     cur_user = User.objects.get(id = request.session['user_id'])
     conversation = Conversation.objects.get(id = conv_id)
     receiver = User.objects.get(id = receiver_id)
     if request.method == "GET":
-        if cur_user.has_message>0:
-            cur_user.has_message -=1
-            cur_user.save()
         context = {
             'cur_user': cur_user,
             'conversation': conversation,
@@ -207,8 +203,6 @@ def chat(request, conv_id, receiver_id):
     else:
         #create new message
         new_message = Message.objects.create(content = request.POST['content'],poster = cur_user, conversation=conversation)
-        receiver.has_message += 1
-        receiver.save()
         conversation.title = new_message.content
         conversation.save()
         context = {
@@ -217,10 +211,3 @@ def chat(request, conv_id, receiver_id):
             'receiver': receiver
         }
         return render(request, 'chat.html', context)
-
-def all_friends(request):
-    context = {
-        'all_users': User.objects.all(),
-        'cur_user': User.objects.get(id = request.session['user_id'])
-    }
-    return render(request, 'all_users.html', context)
