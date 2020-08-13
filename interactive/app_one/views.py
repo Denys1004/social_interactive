@@ -164,14 +164,18 @@ def send_message(request, user_id):
         }
         return render(request, 'send_message.html', context)
     else:
-        needed_conversation = False  #flag
+        conversation_exists = False  #flag
         for conversation in sender.conversations.all():
             if receiver in conversation.users.all():
-                needed_conversation = conversation  #flag will no longer be false
-        if needed_conversation == False:
+                conversation_exists = conversation  #flag will no longer be false
+        if conversation_exists == False:
             #create new conversation
             needed_conversation = Conversation.objects.create(title =request.POST['content'][:50] )
             needed_conversation.users.add(receiver, sender)
+        
+        #tells receiver they have a message
+        receiver.has_message+=1
+        receiver.save()
 
         #create new message
         new_message = Message.objects.create(content = request.POST['content'],poster = sender, conversation=needed_conversation)
@@ -193,7 +197,17 @@ def chat(request, conv_id, receiver_id):
     cur_user = User.objects.get(id = request.session['user_id'])
     conversation = Conversation.objects.get(id = conv_id)
     receiver = User.objects.get(id = receiver_id)
+
     if request.method == "GET":
+        
+        #receiver has read conversation remove all messages in this conversation from has_message count
+        if cur_user.has_message > 0:
+            for message in cur_user.messages.all():
+                if message.conversation == conversation:
+                    cur_user.has_message-=1 
+                    if(cur_user.has_message == 0):
+                        cur_user.save()
+                        break
         context = {
             'cur_user': cur_user,
             'conversation': conversation,
@@ -205,6 +219,11 @@ def chat(request, conv_id, receiver_id):
         new_message = Message.objects.create(content = request.POST['content'],poster = cur_user, conversation=conversation)
         conversation.title = new_message.content
         conversation.save()
+
+        #tells receiver they have a message
+        receiver.has_message+=1
+        receiver.save()
+
         context = {
             'cur_user': cur_user,
             'conversation': conversation,
