@@ -105,6 +105,7 @@ class User(models.Model):
     about = models.TextField(default='')
     password = models.TextField()	
     location = models.CharField(max_length = 255, blank=True, null = True)	
+    has_message=models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add = True)  								
     updated_at = models.DateTimeField(auto_now = True)									
     objects = UserManager()
