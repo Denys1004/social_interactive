@@ -8,33 +8,10 @@ import uuid
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')							
 							
 class UserManager(models.Manager):
-    def register(self, postData, filedata):
-        pw_hash = bcrypt.hashpw(postData['password'].encode(), bcrypt.gensalt()).decode() # create the hash 
-
-        # manage name of the file to prevent conflict
-        # file_name = filedata['avatar'].name   #saving filename .name is like .png
-        # new_name = f"{file_name.split('.')[0]}-{uuid.uuid4().hex}.{file_name.split('.')[-1]}" # adding random string to the name
-        # filedata['avatar'].name = new_name    # reassigning the existing name to new name
-
-        return self.create(
-            first_name=postData['first_name'], 
-            last_name=postData['last_name'], 
-            # birth_date=postData['birth_date'], 
-            email=postData['email'],
-            # avatar = filedata['avatar'], 
-            password=pw_hash
-        )
-    # Checking login 
-    def authenticate(self, email, password):
-        user_with_email = self.filter(email = email)
-        if not user_with_email: # we quering for all users with this email, and if its empty list:
-            return False
-        user = user_with_email[0] # if we do have user with that email in our system:
-        return bcrypt.checkpw(password.encode(), user.password.encode()) # checkpw returns True of False
-
-    def validator(self, postData, user_id=None):												
+    # Register validation
+    def registration_validation(self, postData):												
         errors = {}																										
-        # NAME VALIDATION 	
+        # name validation:	
         if len(postData['first_name']) < 2:											
             errors['first_name'] = 'First name should be atleast 2 characters long.'	
         if not postData['first_name'].isalpha() and postData['first_name'] != '':
@@ -42,22 +19,8 @@ class UserManager(models.Manager):
         if len(postData['last_name']) < 2:										
             errors['last_name'] = 'Last name should be atleast 2 characters long'
         if not postData['last_name'].isalpha() and postData['first_name'] != '':
-            errors['last_name'] = 'Last name must containt only letters.'
-        # DATE VALIDATION
-        if 'birth_date' in postData:
-            if len(postData['birth_date']) < 1:	                							
-                errors['birth_date'] = 'Birth date required.'
-            else: 
-                current_date = datetime.now()                                              
-                date_from_form = postData['birth_date']
-                converted_date_from_form = datetime.strptime(date_from_form, "%Y-%m-%d")
-                duration = current_date - converted_date_from_form
-                age = duration.days / 365.25
-                if age < 13:										
-                    errors['birth_date'] = 'User must be older then 13 years.'	
-                if datetime.strptime(postData['birth_date'], '%Y-%m-%d') > datetime.now():
-                    errors['birth_date'] = 'Date of birth should be in the past.'  
-        # EMAIL VALIDATION
+            errors['last_name'] = 'Last name must containt only letters.' 
+        # email validation:
         if len(postData['email']) < 1:
             errors['email'] = "Email cannot be blank."
         if not EMAIL_REGEX.match(postData['email']): 
@@ -70,36 +33,100 @@ class UserManager(models.Manager):
                     errors['email'] = "Email is already registered."
             else:
                 errors['email'] = "Email is already registered."
-        # PASSWORD VALIDATION
+        # password validation:
         if 'password' in postData:
             if len(postData['password']) < 3:
                 errors['password'] = 'Password required, should be atleast 8 characters long.'
             if postData['password'] != postData['confirm_password']:
                 errors['password'] = "Confirmation didn't match the password"
         return errors
-    def update(self, user_id, postData, fileData):
-        user=User.objects.get(id=user_id)
-        # manage name of the file to prevent conflict
-        file_name = fileData['avatar'].name   #saving filename .name is like .png
-        new_name = f"{file_name.split('.')[0]}-{uuid.uuid4().hex}.{file_name.split('.')[-1]}" # adding random string to the name
-        fileData['avatar'].name = new_name    # reassigning the existing name to new name
 
-        user.first_name=postData['first_name']
-        user.last_name=postData['last_name']
-        user.birth_date=postData['birth_date']
-        user.email=postData['email']
-        user.avatar = fileData['avatar']
-        user.phone_num=postData['phone_num']
-        user.about=postData['about']
-        user.save()
-        return user
+
+    # Register new user
+    def registration(self, postData):
+        pw_hash = bcrypt.hashpw(postData['password'].encode(), bcrypt.gensalt()).decode() # create the hash 
+        return self.create(
+            first_name=postData['first_name'], 
+            last_name=postData['last_name'], 
+            email=postData['email'],
+            password=pw_hash
+        )
+
+
+    # Checking login 
+    def authenticate(self, email, password):
+        user_with_email = self.filter(email = email)
+        if not user_with_email: # we quering for all users with this email, and if its empty list:
+            return False
+        user = user_with_email[0] # if we do have user with that email in our system:
+        return bcrypt.checkpw(password.encode(), user.password.encode()) # checkpw returns True of False
+
+
+    def update_profile_validation(self, postData, user_id):												
+        errors = {}																									
+        # name 	
+        if len(postData['first_name']) < 2:											
+            errors['first_name'] = 'First name should be atleast 2 characters long.'	
+        if not postData['first_name'].isalpha() and postData['first_name'] != '':
+            errors['first_name'] = 'First name must containt only letters.'
+        if len(postData['last_name']) < 2:										
+            errors['last_name'] = 'Last name should be atleast 2 characters long'
+        if not postData['last_name'].isalpha() and postData['first_name'] != '':
+            errors['last_name'] = 'Last name must containt only letters.'
+        
+        # Date validation
+        if 'birth_date' in postData:
+            print('***************************************************************')
+            print('BIRTHDAY DATA FROM FORM LOOKS LIKE: ', postData['birth_date'])
+            print('***************************************************************')
+            if len(postData['birth_date']) < 1:	                							
+                pass
+            else:                                           
+                date_from_form = postData['birth_date']
+                converted_date_from_form = datetime.strptime(date_from_form, "%Y-%m-%d")
+                if datetime.strptime(postData['birth_date'], '%Y-%m-%d') > datetime.now():
+                    errors['birth_date'] = 'Date of birth should be in the past.'  
+
+        # Email validation
+        if len(postData['email']) < 1:
+            errors['email'] = "Email cannot be blank."
+        if not EMAIL_REGEX.match(postData['email']): 
+            errors['email'] = "Email is not valid"
+        result =  self.filter(email = postData['email'])
+        if len(result) > 0:
+            if(user_id):   #if user_id is passed in, we're updating
+                print('were updating')
+                if(user_id !=result[0].id):
+                    errors['email'] = "Email is already registered."
+            else:
+                errors['email'] = "Email is already registered."
+        return errors
+
+    def update_profile(self, user_id, postData, fileData):
+        cur_user = User.objects.get(id = user_id)	
+        if "avatar" in fileData:
+            # manage name of the file to prevent conflict
+            file_name = fileData['avatar'].name   #saving filename .name is like .png
+            new_name = f"{file_name.split('. |- |_')[0]}-{uuid.uuid4().hex}.{file_name.split('.')[-1]}" # adding random string to the name
+            fileData['avatar'].name = new_name    # reassigning the existing name to new name
+            cur_user.avatar = fileData['avatar']
+        if len(postData['birth_date']) > 1:
+            cur_user.birth_date = postData['birth_date']
+
+        cur_user.first_name=postData['first_name']
+        cur_user.last_name=postData['last_name']
+        cur_user.email=postData['email']
+        cur_user.phone_num=postData['phone_num']
+        cur_user.about=postData['about']
+        cur_user.save()
+        return cur_user
 
 class User(models.Model):
     first_name = models.CharField(max_length = 255)										
     last_name = models.CharField(max_length = 255)	
     initials = 	models.CharField(max_length = 10, blank=True, null = True)						
-    birth_date = models.DateField(null=True)	
-    avatar = models.ImageField(upload_to='avatars', default='avatars/no_avatar.png')							
+    birth_date = models.DateField(blank=True, null=True)	
+    avatar = models.ImageField(upload_to='avatars', default='avatars/no_avatar.png')	#upload to avatars is a directory inside media directory, it will go like media/avatars								
     email = models.TextField()
     phone_num = models.CharField(default='', max_length = 255)
     about = models.TextField(default='')

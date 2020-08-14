@@ -43,11 +43,17 @@
                         <div class="chat_form_container">
                             <form action="/chat/{{conversation.id}}/{{receiver.id}}" method="post" class="chat_form">
                                 {% csrf_token %}
-                                <textarea name="content" id="content"></textarea>
-                                <button type="submit" id="send_message_icon">
-                                    <ion-icon name="send"><input type="submit"></ion-icon>
-                                </button>
-                                <p id="add_emoji">emoji</p>
+                                <textarea name="content" id="content" rows="3"></textarea>
+                                <div class="emoji_container">
+                                    <div class="add_emoji_button">
+                                        <p id="add_emoji"><ion-icon name="happy-outline"></ion-icon></p>
+                                    </div>
+                                    <div class="send_mess_button">
+                                        <button type="submit" id="send_message_icon">
+                                            <ion-icon name="send"><input type="submit"></ion-icon>
+                                        </button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>

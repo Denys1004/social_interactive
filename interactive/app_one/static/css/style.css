@@ -11,12 +11,21 @@ p {
   margin-bottom: 0;
 }
 
+ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 li {
   list-style: none;
 }
 
 .errors {
   color: red;
+}
+
+.errors_container {
+  padding: 0 20px;
 }
 
 .green {
@@ -265,7 +274,11 @@ li {
   padding: 0;
 }
 
-.post_container .comment_container form .comment_input {
+.post_container .comment_container .comment_form_container {
+  padding: 10px 0 0;
+}
+
+.post_container .comment_container .comment_form_container form .comment_input {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -277,7 +290,7 @@ li {
           justify-content: space-between;
 }
 
-.post_container .comment_container form .comment_input .add_comment_input input {
+.post_container .comment_container .comment_form_container form .comment_input .add_comment_input input {
   outline: none;
   border: none;
   width: 473px;
@@ -287,7 +300,7 @@ li {
   font-size: 12px;
 }
 
-.post_container .comment_container form .comment_input .btn_add {
+.post_container .comment_container .comment_form_container form .comment_input .btn_add {
   padding: 0;
   font-size: 12px;
   padding: 2px 6px;
@@ -448,6 +461,8 @@ li {
 }
 
 #user_post_info {
+  margin-top: 20px;
+  margin-bottom: 10px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -647,13 +662,37 @@ li {
   width: 100%;
 }
 
-.chat_form_container .chat_form #send_message_icon {
+.chat_form_container .chat_form .emoji_container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.chat_form_container .chat_form .emoji_container .add_emoji_button {
+  margin-bottom: 16px;
+  padding: 0 0 0 6px;
+}
+
+.chat_form_container .chat_form .emoji_container .add_emoji_button #add_emoji {
+  cursor: pointer;
+}
+
+.chat_form_container .chat_form .emoji_container .add_emoji_button #add_emoji ion-icon {
+  color: #acacac;
+  font-size: 24px;
+}
+
+.chat_form_container .chat_form .emoji_container .send_mess_button #send_message_icon {
   background: none;
   padding: 0px;
   border: none;
 }
 
-.chat_form_container .chat_form #send_message_icon ion-icon {
+.chat_form_container .chat_form .emoji_container .send_mess_button #send_message_icon ion-icon {
   padding-left: 10px;
   font-size: 24px;
   color: #17a2b8;
