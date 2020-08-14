@@ -25,7 +25,8 @@ urlpatterns = [
 
     path('chat/<int:conv_id>/<int:receiver_id>', views.chat),
 
-
+    path('like/<int:post_id>', views.add_like),
+    path('unlike/<int:post_id>', views.remove_like),
 
     path('logout', views.logout)
 ]

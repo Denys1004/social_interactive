@@ -22,7 +22,7 @@
                     <div class="profile_page_container">
                         <div class="avatar_img">
                             <div class="box">
-                                <img src="{{ MEDIA_URL }}{{ user.avatar }}" alt="{{ post.poster.first_name}}'s avatar">
+                                <img src="{{ MEDIA_URL }}{{ user.avatar }}" class="image" alt="{{ post.poster.first_name}}'s avatar">
                                 {% if cur_user.id != user.id %}
                                 <a href="/send_to/{{user.id}}" class="send_mess_btn">Send Message to {{user.first_name}}</a>
                                 {% endif %}
@@ -60,8 +60,6 @@
                                     <p id ='image_post_btn'>Add Image Post</p>
                                     <p class="devider"> | </p>
                                     <p id ='video_post_btn'>Add Video Post</p>
-                                    <p class="devider"> | </p>
-                                    <p id ='cancel_post_btn'>Cancel</p>
                                 </div>
                             </div>
 
@@ -73,7 +71,12 @@
                                         <label for="content">Post:</label>
                                         <textarea name="editor1" class="form-control post_content"></textarea>
                                     </div>
-                                    <button class="btn btn-info">Post</button>
+                                    <div class="buttons_container">
+                                        <button class="btn btn-outline-info">Post</button>
+                                        <div class="cancel_post">
+                                            <a href="/user/{{ user.id }}/profile" class="btn btn-info">Cancel</a>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                     
@@ -89,7 +92,12 @@
                                         <label for="files">Files:</label>
                                         <input type="file" id="files" class="form-control" name="files">
                                     </div>
-                                    <button class="btn btn-info">Post</button>
+                                    <div class="buttons_container">
+                                        <button class="btn btn-outline-info">Post</button>
+                                        <div class="cancel_post">
+                                            <a href="/user/{{ user.id }}/profile" class="btn btn-info">Cancel</a>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                             <!-- video_post -->
@@ -105,7 +113,7 @@
                                         <input type="url" name="video_item" class="form-control" id="video_item">
                                     </div>
                                     <div class="buttons_container">
-                                        <button class="btn btn-info">Post</button>
+                                        <button class="btn btn-outline-info">Post</button>
                                         <div class="cancel_post">
                                             <a href="/user/{{ user.id }}/profile" class="btn btn-info">Cancel</a>
                                         </div>

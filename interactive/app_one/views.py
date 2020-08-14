@@ -88,6 +88,7 @@ def login(request):
             messages.error(request, "Email or passwort do not match.")
             return redirect('/login')
         else:
+            request.session.clear()
             user = User.objects.get(email = request.POST['email'])
             request.session['user_id'] = user.id
             return redirect('/dashboard')
@@ -134,6 +135,46 @@ def create_new_text_post(request):
         poster = User.objects.get(id = request.session['user_id'])
         new_post = Post.objects.create(content = request.POST['editor1'], poster = poster)
         return redirect(f'/user/{poster.id}/profile')
+
+# LIKES
+def add_like(request, post_id):
+    user_liking = User.objects.get(id = request.session['user_id'])
+    post_liked = Post.objects.get(id = post_id)
+    if post_liked.videos.all():
+        video_liked = Video_item.objects.get(post = post_liked)
+        context = {
+            'video_liked':video_liked,
+            'posts': Post.objects.all().order_by('-created_at'),
+            'videos': Video_item.objects.all(),
+            'cur_user': User.objects.get(id = request.session['user_id'])
+        }
+    post_liked.likes.add(user_liking)
+    context = {
+        'posts': Post.objects.all().order_by('-created_at'),
+        'videos': Video_item.objects.all(),
+        'cur_user': User.objects.get(id = request.session['user_id'])
+    }
+    return redirect('/dashboard')
+
+def remove_like(request, post_id):
+    user_liking = User.objects.get(id = request.session['user_id'])
+    post_liked = Post.objects.get(id = post_id)
+    if post_liked.videos.all():
+        video_liked = Video_item.objects.get(post = post_liked)
+        context = {
+            'video_liked':video_liked,
+            'posts': Post.objects.all().order_by('-created_at'),
+            'videos': Video_item.objects.all(),
+            'cur_user': User.objects.get(id = request.session['user_id'])
+        }
+    post_liked.likes.remove(user_liking)
+    context = {
+        'posts': Post.objects.all().order_by('-created_at'),
+        'videos': Video_item.objects.all(),
+        'cur_user': User.objects.get(id = request.session['user_id'])
+    }
+    return redirect('/dashboard')
+
 
 
 
@@ -208,9 +249,18 @@ def chat(request, conv_id, receiver_id):
     conversation = Conversation.objects.get(id = conv_id)
     receiver = User.objects.get(id = receiver_id)
     if request.method == "GET":
-        if cur_user.has_message>0:
-            cur_user.has_message -=1
-            cur_user.save()
+        #receiver has read conversation remove all messages in this conversation from has_message count
+        if cur_user.has_message > 0:
+            print("*****************************************")
+            print(cur_user.messages.all())
+            print("*****************************************")
+            for message in cur_user.messages.all():
+
+                if message.conversation == conversation:
+                    cur_user.has_message -= 1 
+                    if(cur_user.has_message == 0):
+                        cur_user.save()
+                        break
         context = {
             'cur_user': cur_user,
             'conversation': conversation,
