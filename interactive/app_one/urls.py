@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-from .views import create_new_image_post
 
 urlpatterns = [
     path('', views.index),
