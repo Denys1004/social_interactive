@@ -49,6 +49,16 @@
                                     <img src="{{ MEDIA_URL }}{{ post.post_image }}" alt="">
                                 </div>
                                 {% endif %}
+
+                                <div class="like">
+                                    <p class="likess">{{post.likes.count}}</p>
+                                    <ion-icon name="heart"></ion-icon>
+                                    {% if cur_user in post.likes.all %}
+                                    <a id="unlike" post_id='{{post.id}}' href="/unlike/{{post.id}}">Unlike</a>
+                                    {% else %}
+                                    <a id="like" post_id='{{post.id}}' href="/like/{{post.id}}">Like</a>
+                                    {% endif %}
+                                </div>
                      
 
                                 <div class="comment_container">
