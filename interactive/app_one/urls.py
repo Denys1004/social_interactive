@@ -7,9 +7,9 @@ urlpatterns = [
     path('login', views.login),
     path('register', views.create_user),
     path('dashboard', views.dashboard),
-    path('create_new_text_post', views.create_new_text_post),
-    path('create_new_image_post', views.create_new_image_post),
-    path('create_new_video_post', views.create_new_video_post),
+    
+    path('create_post/<str:post_type>', views.create_post),
+    
     path('user/<int:user_id>/profile', views.user_profile),
     
     path('update_profile/<int:user_id>', views.update_profile),

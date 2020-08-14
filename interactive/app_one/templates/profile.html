@@ -65,7 +65,7 @@
 
                             <!-- text_post -->
                             <div id="text_post">
-                                <form action="/create_new_text_post" method="POST" enctype="multipart/form-data">
+                                <form action="/create_post/text" method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="form-group">
                                         <label for="content">Post:</label>
@@ -82,7 +82,7 @@
                     
                             <!-- image_post -->
                             <div id="image_post">
-                                <form action="/create_new_image_post" method="POST" enctype="multipart/form-data">
+                                <form action="/create_post/image" method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="form-group">
                                         <label for="content">Description:</label>
@@ -102,7 +102,7 @@
                             </div>
                             <!-- video_post -->
                             <div id="video_post">
-                                <form action="/create_new_video_post" method="POST" enctype="multipart/form-data">
+                                <form action="/create_post/video" method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="form-group">
                                         <label for="content">Description:</label>

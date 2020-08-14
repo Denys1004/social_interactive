@@ -17,8 +17,73 @@
                     <div class="page_title_container">
                         <h4>News</h4>
                     </div>
-    
                     <div class="all_posts_container">
+                        <div class="which_form">
+                            <p id ='text_post_btn'>Add Text Post</p>
+                            <p class="devider"> | </p>
+                            <p id ='image_post_btn'>Add Image Post</p>
+                            <p class="devider"> | </p>
+                            <p id ='video_post_btn'>Add Video Post</p>
+                        </div>
+                    </div>
+
+                    <!-- text_post -->
+                    <div id="text_post">
+                        <form action="/create_post/text" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="content">Post:</label>
+                                <textarea name="editor1" class="form-control post_content"></textarea>
+                            </div>
+                            <div class="buttons_container">
+                                <button class="btn btn-outline-info">Post</button>
+                                <div class="cancel_post">
+                                    <a href="" class="btn btn-info">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+            
+                    <!-- image_post -->
+                    <div id="image_post">
+                        <form action="/create_post/image" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="content">Description:</label>
+                                <input type="text" name="content" class="form-control" class="post_content">
+                            </div>
+                            <div class="form-group">
+                                <label for="files">Files:</label>
+                                <input type="file" id="files" class="form-control" name="files">
+                            </div>
+                            <div class="buttons_container">
+                                <button class="btn btn-outline-info">Post</button>
+                                <div class="cancel_post">
+                                    <a href="" class="btn btn-info">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- video_post -->
+                    <div id="video_post">
+                        <form action="/create_post/video" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="content">Description:</label>
+                                <input type="text" name="content" class="form-control" class="post_content" >
+                            </div>
+                            <div class="form-group">
+                                <label for="video_item">Video URL:</label>
+                                <input type="url" name="video_item" class="form-control" id="video_item">
+                            </div>
+                            <div class="buttons_container">
+                                <button class="btn btn-outline-info">Post</button>
+                                <div class="cancel_post">
+                                    <a href="" class="btn btn-info">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                         {% for post in posts %}
                             <div class="post_container">
                                 <div class="post_header">
