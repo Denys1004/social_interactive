@@ -97,13 +97,25 @@ def all_friends(request):
     return render(request, 'all_users.html', context)
 
 #Posts______________________________________________________________________________________________________________________________#
+def create_post(request, post_type):
+    poster = User.objects.get(id = request.session['user_id'])
+    if post_type=='text':
+        Post.objects.create(content = request.POST['editor1'], poster = poster)
+    elif post_type=='image':
+        Post.objects.create_image_post(request.POST, request.FILES, poster)
+    elif post_type=='video':
+        new_post=Post.objects.create(content = request.POST['content'], poster = poster)
+        Video_item.objects.create(video = request.POST['video_item'], post = new_post, video_poster = poster )
+    return redirect('/dashboard')
+
 def create_new_image_post(request):
     if request.method == "GET":
-        context = {
-            'videos': Video_item.objects.all(),
-            'cur_user': User.objects.get(id = request.session['user_id']),
-        }
-        return redirect('/dashboard')
+        # context = {
+        #     'videos': Video_item.objects.all(),
+        #     'cur_user': User.objects.get(id = request.session['user_id']),
+        # }
+        # return redirect('/dashboard')
+        pass
     else:
         poster = User.objects.get(id = request.session['user_id'])
         new_post = Post.objects.create_image_post(request.POST, request.FILES, poster)
@@ -111,11 +123,12 @@ def create_new_image_post(request):
 
 def create_new_video_post(request):
     if request.method == "GET":
-        context = {
-            'videos': Video_item.objects.all(),
-            'cur_user': User.objects.get(id = request.session['user_id']),
-        }
-        return redirect('/dashboard')
+        # context = {
+        #     'videos': Video_item.objects.all(),
+        #     'cur_user': User.objects.get(id = request.session['user_id']),
+        # }
+        # return redirect('/dashboard')
+        pass
     else:
         poster = User.objects.get(id = request.session['user_id'])
         new_post = Post.objects.create(content = request.POST['content'], poster = poster)
@@ -124,15 +137,34 @@ def create_new_video_post(request):
 
 def create_new_text_post(request):
     if request.method == "GET":
-        context = {
-            'videos': Video_item.objects.all(),
-            'cur_user': User.objects.get(id = request.session['user_id']),
-        }
-        return redirect('/dashboard')
+        # context = {
+        #     'videos': Video_item.objects.all(),
+        #     'cur_user': User.objects.get(id = request.session['user_id']),
+        # }
+        # return redirect('/dashboard')
+        pass
     else:
         poster = User.objects.get(id = request.session['user_id'])
         new_post = Post.objects.create(content = request.POST['editor1'], poster = poster)
         return redirect(f'/user/{poster.id}/profile')
+def add_comment(request, post_id):
+    needed_post = Post.objects.get(id = post_id)
+    comment_poster = User.objects.get(id = request.session['user_id'])
+    Comment.objects.create(comment=request.POST['comment'], poster = comment_poster, post = needed_post)
+    return redirect('/dashboard')
+
+def post_comment_with_ajax(request):
+    needed_post = Post.objects.get(id = request.POST['post_id'])
+    comment_poster = User.objects.get(id = request.session['user_id'])
+    Comment.objects.create(comment=request.POST['comment'], poster = comment_poster, post = needed_post)
+    all_posts_comments = needed_post.comments.all()
+    context = {
+        'current_post_comments':all_posts_comments,
+        'cur_user': User.objects.get(id = request.session['user_id']),
+        'posts': Post.objects.all().order_by('-created_at'),
+        'videos': Video_item.objects.all()
+    }
+    return render(request, 'comments_partial.html', context)
 
 # LIKES_____________________________________________________________________________________________________________________________#
 def add_like(request, post_id):
@@ -173,27 +205,7 @@ def remove_like(request, post_id):
     }
     return redirect('/dashboard')
 
-
-def add_comment(request, post_id):
-    needed_post = Post.objects.get(id = post_id)
-    comment_poster = User.objects.get(id = request.session['user_id'])
-    Comment.objects.create(comment=request.POST['comment'], poster = comment_poster, post = needed_post)
-    return redirect('/dashboard')
-
-def post_comment_with_ajax(request):
-    needed_post = Post.objects.get(id = request.POST['post_id'])
-    comment_poster = User.objects.get(id = request.session['user_id'])
-    Comment.objects.create(comment=request.POST['comment'], poster = comment_poster, post = needed_post)
-    all_posts_comments = needed_post.comments.all()
-    context = {
-        'current_post_comments':all_posts_comments,
-        'cur_user': User.objects.get(id = request.session['user_id']),
-        'posts': Post.objects.all().order_by('-created_at'),
-        'videos': Video_item.objects.all()
-    }
-    return render(request, 'comments_partial.html', context)
-
-#Conversation functions_____________________________________________________________________________________________________________#
+#Conversation ______________________________________________________________________________________________________________________#
 def send_message(request, user_id):
     receiver = User.objects.get(id = user_id)
     sender = User.objects.get(id = request.session['user_id'])
