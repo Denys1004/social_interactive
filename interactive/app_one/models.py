@@ -155,6 +155,7 @@ class Post(models.Model):
     content = models.TextField()
     post_image = models.ImageField(upload_to='post_images', default=None, blank=True, null = True)
     poster = models.ForeignKey(User, related_name = 'poster', on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name = 'posts_liked')
     created_at = models.DateTimeField(auto_now_add = True)  								
     updated_at = models.DateTimeField(auto_now = True)	
     objects = PostManager()
@@ -198,3 +199,4 @@ class Message(models.Model):
     conversation = models.ForeignKey(Conversation, related_name = 'messages', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add = True)  								
     updated_at = models.DateTimeField(auto_now = True)
+    # status()
