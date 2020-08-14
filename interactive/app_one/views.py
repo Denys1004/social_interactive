@@ -5,57 +5,12 @@ import bcrypt
 from datetime import datetime
 from django.core.paginator import Paginator
 
-from django.forms.models import model_to_dict # Need for sortation
+from django.forms.models import model_to_dict
 
+#User functions_____________________________________________________________________________________________________________________#
 def index(request):
     return redirect('/login')
 
-
-def dashboard(request):
-    context = {
-        'cur_user': User.objects.get(id = request.session['user_id']),
-        'posts': Post.objects.all().order_by('-created_at'),
-        'videos': Video_item.objects.all()
-    }
-    return render(request, 'dashboard.html', context)
-
-# See profile
-def user_profile(request, user_id):
-    needed_user = User.objects.get(id=user_id)
-    needed_user.birth_date = str(needed_user.birth_date)
-    user_posts = needed_user.poster.all().order_by('-created_at')
-    context = {
-        'cur_user': User.objects.get(id = request.session['user_id']),
-        'user':needed_user,
-        'user_posts':user_posts
-    }
-    return render(request, 'profile.html', context)
-
-
-
-
-# Update users profile
-def update_profile(request, user_id):
-    if request.method == "GET":
-        cur_user = User.objects.get(id = user_id)
-        cur_user.birth_date = str(cur_user.birth_date)
-        context = {
-            'cur_user': cur_user
-        }
-        return render(request, 'update_profile.html', context)
-    else:
-        errors = User.objects.update_profile_validation(request.POST, user_id)	
-        if len(errors)>0:													
-            for value in errors.values():											
-                messages.error(request, value)											
-            return redirect(f'/update_profile/{user_id}')
-
-        updated_user = User.objects.update_profile(user_id, request.POST, request.FILES)
-        return redirect(f'/user/{user_id}/profile')
-
-
-
-# Register new user
 def create_user(request):
     if request.method == "GET":
         return render(request, "register.html")
@@ -64,37 +19,83 @@ def create_user(request):
         request.session['first_name'] = request.POST['first_name']
         request.session['last_name'] = request.POST['last_name']
         request.session['email'] = request.POST['email']
-        errors = User.objects.registration_validation(request.POST)	
+        
+        errors = User.objects.validator(request.POST)	
         if len(errors)>0:													
             for value in errors.values():											
                 messages.error(request, value)											
             return redirect('/register')
-        new_user = User.objects.registration(request.POST)
+
+        new_user = User.objects.register(request.POST, request.FILES)
         request.session.clear()
         request.session['user_id'] = new_user.id
+        request.session['initials'] = new_user.first_name[0] + new_user.last_name[0]
         return redirect('/dashboard')
 
-# Login
 def login(request):
     if request.method == "GET":
-        if 'user_id' in request.session:
-            request.session.clear()
-            return render(request, "login.html")
-        else:
-            return render(request, "login.html")
+        request.session.clear()
+        return render(request, "login.html")
     else:
         result = User.objects.authenticate(request.POST['email'],request.POST['password']) # Checking login
         if result == False:
-            messages.error(request, "Email or passwort do not match.")
+            messages.error(request, "Email or password do not match.")
             return redirect('/login')
         else:
             user = User.objects.get(email = request.POST['email'])
             request.session['user_id'] = user.id
+            request.session['initials'] = user.first_name[0] + user.last_name[0]
             return redirect('/dashboard')
-        
 
+def logout(request):
+    request.session.clear()
+    return redirect("/login")    
 
-# CREATE NEW IMAGE POST
+def user_profile(request, user_id):
+    needed_user = User.objects.get(id=user_id)
+    user_posts = needed_user.poster.all().order_by('-created_at')
+    context = {
+        'cur_user': User.objects.get(id = request.session['user_id']),
+        'user':needed_user,
+        'user_posts':user_posts
+    }
+    return render(request, 'profile.html', context)
+
+def update_profile(request, user_id):
+    if request.method == "GET":
+        cur_user=User.objects.get(id = user_id)
+        cur_user.birth_date=str(cur_user.birth_date)
+        context = {
+            'cur_user': cur_user
+        }
+        return render(request, 'update_profile.html', context)
+    else:
+        errors = User.objects.validator(request.POST, user_id)	
+        if len(errors)>0:													
+            for value in errors.values():											
+                messages.error(request, value)											
+            return redirect(f'/update_profile/{user_id}')
+
+        updated_user = User.objects.update(user_id, request.POST, request.FILES)
+        return redirect(f'/user/{user_id}/profile')
+
+#Independent Pages__________________________________________________________________________________________________________________#
+def dashboard(request):
+    context = {
+        'cur_user': User.objects.get(id = request.session['user_id']),
+        'posts': Post.objects.all().order_by('-created_at'),
+        'videos': Video_item.objects.all()
+    }
+    return render(request, 'dashboard.html', context)
+
+def all_friends(request):
+    context = {
+        'all_users': User.objects.all(),
+        'cur_user': User.objects.get(id = request.session['user_id'])
+    }
+    return render(request, 'all_users.html', context)
+
+#Posts______________________________________________________________________________________________________________________________#
 def create_new_image_post(request):
     if request.method == "GET":
         context = {
@@ -107,7 +108,6 @@ def create_new_image_post(request):
         new_post = Post.objects.create_image_post(request.POST, request.FILES, poster)
         return redirect('/dashboard')
 
-# CREATE NEW VIDEO POST
 def create_new_video_post(request):
     if request.method == "GET":
         context = {
@@ -121,8 +121,6 @@ def create_new_video_post(request):
         new_video = Video_item.objects.create(video = request.POST['video_item'], post = new_post, video_poster = poster )
         return redirect('/dashboard')
 
-
-# CREATE NEW Text POST
 def create_new_text_post(request):
     if request.method == "GET":
         context = {
@@ -133,16 +131,13 @@ def create_new_text_post(request):
     else:
         poster = User.objects.get(id = request.session['user_id'])
         new_post = Post.objects.create(content = request.POST['editor1'], poster = poster)
-        return redirect(f'/user/{poster.id}/profile')
-
-
+        return redirect('/dashboard')
 
 def add_comment(request, post_id):
     needed_post = Post.objects.get(id = post_id)
     comment_poster = User.objects.get(id = request.session['user_id'])
     Comment.objects.create(comment=request.POST['comment'], poster = comment_poster, post = needed_post)
     return redirect('/dashboard')
-
 
 def post_comment_with_ajax(request):
     needed_post = Post.objects.get(id = request.POST['post_id'])
@@ -157,8 +152,7 @@ def post_comment_with_ajax(request):
     }
     return render(request, 'comments_partial.html', context)
 
-
-
+#Conversation functions_____________________________________________________________________________________________________________#
 def send_message(request, user_id):
     receiver = User.objects.get(id = user_id)
     sender = User.objects.get(id = request.session['user_id'])
@@ -170,27 +164,26 @@ def send_message(request, user_id):
         }
         return render(request, 'send_message.html', context)
     else:
-        needed_conversation = False  #flag
+        conversation_exists = False  #flag
         for conversation in sender.conversations.all():
             if receiver in conversation.users.all():
-                needed_conversation = conversation  #flag will no longer be false
-        if needed_conversation == False:
+                conversation_exists = conversation  #flag will no longer be false
+        if conversation_exists == False:
             #create new conversation
             needed_conversation = Conversation.objects.create(title =request.POST['content'][:50] )
             needed_conversation.users.add(receiver, sender)
+        
+        #tells receiver they have a message
+        receiver.has_message+=1
+        receiver.save()
 
         #create new message
         new_message = Message.objects.create(content = request.POST['content'],poster = sender, conversation=needed_conversation)
-        receiver.has_message += 1
-        receiver.save()
-
+        new_message.receivers.add(receiver)
         needed_conversation.title = new_message.content
         needed_conversation.save()
 
         return redirect(f'/chat/{needed_conversation.id}/{receiver.id}')
-
-
-
 
 def display_messages(request):
     cur_user = User.objects.get(id = request.session['user_id'])
@@ -201,16 +194,21 @@ def display_messages(request):
     }
     return render(request, 'display_conversations.html', context)
 
-
-
 def chat(request, conv_id, receiver_id):
     cur_user = User.objects.get(id = request.session['user_id'])
     conversation = Conversation.objects.get(id = conv_id)
     receiver = User.objects.get(id = receiver_id)
+
     if request.method == "GET":
-        if cur_user.has_message>0:
-            cur_user.has_message -=1
+        
+        #receiver has read conversation remove all messages in this conversation from has_message count
+        if(cur_user.has_message>0):
+            new_messages=cur_user.inbox.all().filter(conversation=conversation) #filter all messages in users inbox by conversation that was clicked
+            cur_user.has_message-=len(new_messages) #reduce has_message count by number of new messages found
             cur_user.save()
+            for message in new_messages:        #remove all new messages from inbox
+                cur_user.inbox.remove(message)
+
         context = {
             'cur_user': cur_user,
             'conversation': conversation,
@@ -220,26 +218,17 @@ def chat(request, conv_id, receiver_id):
     else:
         #create new message
         new_message = Message.objects.create(content = request.POST['content'],poster = cur_user, conversation=conversation)
-        receiver.has_message += 1
-        receiver.save()
+        new_message.receivers.add(receiver)
         conversation.title = new_message.content
         conversation.save()
+
+        #tells receiver they have a message
+        receiver.has_message+=1
+        receiver.save()
+
         context = {
             'cur_user': cur_user,
             'conversation': conversation,
             'receiver': receiver
         }
         return render(request, 'chat.html', context)
-
-
-def all_friends(request):
-    context = {
-        'all_users': User.objects.all(),
-        'cur_user': User.objects.get(id = request.session['user_id'])
-    }
-    return render(request, 'all_users.html', context)
-
-# LOGOUT
-def logout(request):
-    request.session.clear()
-    return redirect("/login")

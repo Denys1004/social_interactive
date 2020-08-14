@@ -102,9 +102,6 @@ class UserManager(models.Manager):
                 errors['email'] = "Email is already registered."
         return errors
 
-
-
-
     def update_profile(self, user_id, postData, fileData):
         cur_user = User.objects.get(id = user_id)	
         if "avatar" in fileData:
@@ -124,29 +121,23 @@ class UserManager(models.Manager):
         cur_user.save()
         return cur_user
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+class User(models.Model):
+    first_name = models.CharField(max_length = 255)										
+    last_name = models.CharField(max_length = 255)	
+    initials = 	models.CharField(max_length = 10, blank=True, null = True)						
+    birth_date = models.DateField(blank=True, null=True)	
+    avatar = models.ImageField(upload_to='avatars', default='avatars/no_avatar.png')	#upload to avatars is a directory inside media directory, it will go like media/avatars								
+    email = models.TextField()
+    phone_num = models.CharField(default='', max_length = 255)
+    about = models.TextField(default='')
+    password = models.TextField()	
+    location = models.CharField(max_length = 255, blank=True, null = True)	
+    has_message=models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add = True)  								
+    updated_at = models.DateTimeField(auto_now = True)									
+    objects = UserManager()
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
 class PostManager(models.Manager):
     def create_image_post(self, postData, fileData, poster_obj):
@@ -159,34 +150,14 @@ class PostManager(models.Manager):
             poster = poster_obj,
             post_image = fileData['files']
         )
-class User(models.Model):
-    first_name = models.CharField(max_length = 255)										
-    last_name = models.CharField(max_length = 255)
-    nickname = 	models.CharField(max_length = 50, blank=True, null = True)		
-    initials = 	models.CharField(max_length = 10, blank=True, null = True)						
-    birth_date = models.DateField(blank=True, null=True)	
-    avatar = models.ImageField(upload_to='avatars', default='avatars/no_avatar.png')	#upload to avatars is a directory inside media directory, it will go like media/avatars								
-    email = models.TextField()
-    has_message = models.IntegerField(default=0)
-    phone_num = models.CharField(default='', max_length = 255)
-    about = models.TextField(default='')
-    password = models.TextField()	
-    location = models.CharField(max_length = 255, blank=True, null = True)	
-    created_at = models.DateTimeField(auto_now_add = True)  								
-    updated_at = models.DateTimeField(auto_now = True)									
-    objects = UserManager()
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
 
 class Post(models.Model):
-    title = models.CharField(max_length = 255, null = True, blank=True, default=None)
     content = models.TextField()
     post_image = models.ImageField(upload_to='post_images', default=None, blank=True, null = True)
     poster = models.ForeignKey(User, related_name = 'poster', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add = True)  								
     updated_at = models.DateTimeField(auto_now = True)	
     objects = PostManager()
-
     def __str__(self):
         return self.title if self.title else  'no-title, post of:  ' + self.poster.first_name + ' ' + self.poster.last_name
 
@@ -220,10 +191,10 @@ class Conversation(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)  								
     updated_at = models.DateTimeField(auto_now = True)
 
-
 class Message(models.Model):
     content = models.TextField(default = 'Hello')
     poster = models.ForeignKey(User, related_name = 'messages', on_delete=models.CASCADE)
+    receivers= models.ManyToManyField(User, related_name ='inbox')
     conversation = models.ForeignKey(Conversation, related_name = 'messages', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add = True)  								
     updated_at = models.DateTimeField(auto_now = True)
