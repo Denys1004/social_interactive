@@ -17,12 +17,15 @@
                     <div class="page_title_container">
                         <h4>Update profile</h4>
                     </div>
-                    {% if messages %}                                                                      				 	
+                    <div class="errors_container">
+                        {% if messages %}                                                                      				 	
                         <ul class="messages">                                           								
                             {% for message in messages %}                                       							
                                 <li class="errors">{{ message }}</li>       									
                             {% endfor %}   
-                    {% endif %}
+                        {% endif %}
+                    </div>
+
                     <div class="update_profile_container">
                         <form action="/update_profile/{{cur_user.id}}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
@@ -38,6 +41,7 @@
                                 <label for="email">Email:</label>
                                 <input type="text" name="email" class="form-control" id="email" value = "{{cur_user.email}}">
                             </div>
+                            {{ cur_user.birth_date}}
                             <div class="form-group">
                                 <label for="birth_date">Birthdate:</label>
                                 <input type="date" name="birth_date" class="form-control" id="birth_date" value = "{{cur_user.birth_date}}">

@@ -17,11 +17,18 @@ p{
     margin-top: 0;
     margin-bottom: 0;
 }
+ul{
+    margin-top: 0;
+    margin-bottom: 0;
+}
 li{
     list-style: none;
 }
 .errors{
     color: $red;
+}
+.errors_container{
+    padding: 0 20px;
 }
 
 .green{
@@ -223,30 +230,32 @@ li{
 
     
     .comment_container{
-        form{
-            .comment_input{
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                .add_comment_input{
-                    input{
-                        outline: none;
-                        border: none;
-                        // min-width: 31rem;
-                        width: 473px;
-                        border-radius: 5px;
-                        margin-right: 10px;
-                        padding: 4px 10px;
-                        font-size: 12px;
+        .comment_form_container{
+            padding: 10px 0 0;
+            form{
+                .comment_input{
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    .add_comment_input{
+                        input{
+                            outline: none;
+                            border: none;
+                            // min-width: 31rem;
+                            width: 473px;
+                            border-radius: 5px;
+                            margin-right: 10px;
+                            padding: 4px 10px;
+                            font-size: 12px;
+                        }
                     }
-                }
-                .btn_add{
-                    padding: 0;
-                    font-size: 12px;
-                    padding: 2px 6px;
-                    letter-spacing: 0.4px;
-                    margin-top: 1px;
-            
+                    .btn_add{
+                        padding: 0;
+                        font-size: 12px;
+                        padding: 2px 6px;
+                        letter-spacing: 0.4px;
+                        margin-top: 1px;
+                    }
                 }
             }
         }
@@ -384,6 +393,8 @@ li{
      color: $grey;       
 }
 #user_post_info{
+    margin-top: 20px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     padding: 6px;
@@ -552,21 +563,37 @@ li{
 }
 .chat_form_container{
     padding: 20px;
-    // background-color: $bg_color;
     .chat_form{
         display: flex;
         align-items: flex-end;
         #content{
             width: 100%;
         }
-        #send_message_icon{
-            background: none;
-            padding: 0px;
-            border: none;
-            ion-icon {
-                padding-left: 10px;
-                font-size: 24px;
-                color: $button_color;
+        .emoji_container{
+            display: flex;
+            flex-direction: column;
+            .add_emoji_button{
+                margin-bottom: 16px;
+                padding:  0 0 0 6px;
+                #add_emoji{
+                    cursor: pointer;
+                    ion-icon {
+                        color: $grey;
+                        font-size: 24px;
+                    }
+                }
+            }
+            .send_mess_button{
+                #send_message_icon{
+                    background: none;
+                    padding: 0px;
+                    border: none;
+                    ion-icon {
+                        padding-left: 10px;
+                        font-size: 24px;
+                        color: $button_color;
+                    }
+                }
             }
         }
     }
