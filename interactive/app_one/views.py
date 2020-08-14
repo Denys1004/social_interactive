@@ -20,13 +20,13 @@ def create_user(request):
         request.session['last_name'] = request.POST['last_name']
         request.session['email'] = request.POST['email']
         
-        errors = User.objects.validator(request.POST)	
+        errors = User.objects.registration_validation(request.POST)	
         if len(errors)>0:													
             for value in errors.values():											
                 messages.error(request, value)											
             return redirect('/register')
 
-        new_user = User.objects.register(request.POST, request.FILES)
+        new_user = User.objects.registration(request.POST)
         request.session.clear()
         request.session['user_id'] = new_user.id
         request.session['initials'] = new_user.first_name[0] + new_user.last_name[0]
@@ -71,7 +71,7 @@ def update_profile(request, user_id):
         }
         return render(request, 'update_profile.html', context)
     else:
-        errors = User.objects.validator(request.POST, user_id)	
+        errors = User.objects.update_profile_validation(request.POST, user_id)	
         if len(errors)>0:													
             for value in errors.values():											
                 messages.error(request, value)											
@@ -134,7 +134,7 @@ def create_new_text_post(request):
         new_post = Post.objects.create(content = request.POST['editor1'], poster = poster)
         return redirect(f'/user/{poster.id}/profile')
 
-# LIKES
+# LIKES_____________________________________________________________________________________________________________________________#
 def add_like(request, post_id):
     user_liking = User.objects.get(id = request.session['user_id'])
     post_liked = Post.objects.get(id = post_id)
@@ -172,8 +172,6 @@ def remove_like(request, post_id):
         'cur_user': User.objects.get(id = request.session['user_id'])
     }
     return redirect('/dashboard')
-
-
 
 
 def add_comment(request, post_id):

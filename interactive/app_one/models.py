@@ -27,11 +27,6 @@ class UserManager(models.Manager):
             errors['email'] = "Email is not valid"
         result =  self.filter(email = postData['email'])
         if len(result) > 0:
-            if(user_id):   #if user_id is passed in, we're updating
-                print('were updating')
-                if(user_id !=result[0].id):
-                    errors['email'] = "Email is already registered."
-            else:
                 errors['email'] = "Email is already registered."
         # password validation:
         if 'password' in postData:
