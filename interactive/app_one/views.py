@@ -77,7 +77,7 @@ def update_profile(request, user_id):
                 messages.error(request, value)											
             return redirect(f'/update_profile/{user_id}')
 
-        updated_user = User.objects.update(user_id, request.POST, request.FILES)
+        updated_user = User.objects.update_profile(user_id, request.POST, request.FILES)
         return redirect(f'/user/{user_id}/profile')
 
 #Independent Pages__________________________________________________________________________________________________________________#
