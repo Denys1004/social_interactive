@@ -179,6 +179,7 @@ def send_message(request, user_id):
 
         #create new message
         new_message = Message.objects.create(content = request.POST['content'],poster = sender, conversation=needed_conversation)
+        new_message.receivers.add(receiver)
         needed_conversation.title = new_message.content
         needed_conversation.save()
 
@@ -201,13 +202,13 @@ def chat(request, conv_id, receiver_id):
     if request.method == "GET":
         
         #receiver has read conversation remove all messages in this conversation from has_message count
-        if cur_user.has_message > 0:
-            for message in cur_user.messages.all():
-                if message.conversation == conversation:
-                    cur_user.has_message-=1 
-                    if(cur_user.has_message == 0):
-                        cur_user.save()
-                        break
+        if(cur_user.has_message>0):
+            new_messages=cur_user.inbox.all().filter(conversation=conversation) #filter all messages in users inbox by conversation that was clicked
+            cur_user.has_message-=len(new_messages) #reduce has_message count by number of new messages found
+            cur_user.save()
+            for message in new_messages:        #remove all new messages from inbox
+                cur_user.inbox.remove(message)
+
         context = {
             'cur_user': cur_user,
             'conversation': conversation,
@@ -217,6 +218,7 @@ def chat(request, conv_id, receiver_id):
     else:
         #create new message
         new_message = Message.objects.create(content = request.POST['content'],poster = cur_user, conversation=conversation)
+        new_message.receivers.add(receiver)
         conversation.title = new_message.content
         conversation.save()
 

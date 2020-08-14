@@ -167,6 +167,7 @@ class Conversation(models.Model):
 class Message(models.Model):
     content = models.TextField(default = 'Hello')
     poster = models.ForeignKey(User, related_name = 'messages', on_delete=models.CASCADE)
+    receivers= models.ManyToManyField(User, related_name ='inbox')
     conversation = models.ForeignKey(Conversation, related_name = 'messages', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add = True)  								
     updated_at = models.DateTimeField(auto_now = True)
