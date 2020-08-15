@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .models import *
 from django.contrib import messages
-import bcrypt
+import bcrypt, json
 from datetime import datetime
 from django.core.paginator import Paginator
 
@@ -145,7 +145,9 @@ def add_like(request, post_id):
         'videos': Video_item.objects.all(),
         'cur_user': User.objects.get(id = request.session['user_id'])
     }
-    return redirect('/dashboard')
+    return HttpResponse(json.dumps(post_liked.likes.count()), content_type = 'application/json')
+
+
 
 def remove_like(request, post_id):
     user_liking = User.objects.get(id = request.session['user_id'])
@@ -164,7 +166,7 @@ def remove_like(request, post_id):
         'videos': Video_item.objects.all(),
         'cur_user': User.objects.get(id = request.session['user_id'])
     }
-    return redirect('/dashboard')
+    return HttpResponse(json.dumps(post_liked.likes.count()), content_type = 'application/json')
 
 #Conversation ______________________________________________________________________________________________________________________#
 def send_message(request, user_id):
@@ -281,6 +283,14 @@ def delete_post(request, post_id):
     return redirect('/dashboard')
 
 def delete_comment(request, comment_id):
-    to_delete = Comment.objects.get(id = comment_id)
-    to_delete.delete()
-    return redirect('/dashboard')
+    comment = Comment.objects.get(id = comment_id)
+    needed_post = comment.post
+    comment.delete()
+    all_posts_comments = needed_post.comments.all()
+    context = {
+        'current_post_comments':all_posts_comments,
+        'cur_user': User.objects.get(id = request.session['user_id']),
+        'posts': Post.objects.all().order_by('-created_at'),
+        'videos': Video_item.objects.all()
+    }
+    return render(request, 'comments_partial.html', context)

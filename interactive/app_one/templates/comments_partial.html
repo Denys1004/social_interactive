@@ -4,7 +4,14 @@
         <a href="/user/{{ comment.poster.id }}/profile"><img src="{{ MEDIA_URL }}{{ comment.poster.avatar }}" alt=""></a>
     </div>
     <div class="comment_content">
-        <a class="comment_poster" href="">{{ comment.poster.first_name }} {{ comment.poster.last_name }}</a>
+        <div class="comment_content_header">
+            <a class="comment_poster" href="">{{ comment.poster.first_name }} {{ comment.poster.last_name }}</a>
+            {% if comment.poster.id == cur_user.id %}
+            <div class="delete_comment_btn">
+                <a id="delete_com" href="/delete/comment/{{comment.id}}">Delete</a>
+            </div>
+            {% endif %}
+        </div>
         <p class="comment_text">{{ comment.comment }}</p>
         <small>{{ comment.created_at }}</small>
     </div>

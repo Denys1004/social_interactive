@@ -77,12 +77,17 @@
                                     <p class="likess">{{post.likes.count}}</p>
                                     <ion-icon name="heart"></ion-icon>
                                     {% if cur_user in post.likes.all %}
-                                    <a id="unlike" post_id='{{post.id}}' href="/unlike/{{post.id}}">Unlike</a>
+                                    <a class="unlike" post_id='{{post.id}}' href="/unlike/{{post.id}}" href2="/like/{{post.id}}">Unlike</a>
                                     {% else %}
-                                    <a id="like" post_id='{{post.id}}' href="/like/{{post.id}}">Like</a>
+                                    <a class="unlike" post_id='{{post.id}}' href="/like/{{post.id}}" href2="/unlike/{{post.id}}">Like</a>
                                     {% endif %}
                                 </div>
                         
+
+
+
+
+
                                 <!-- create comment -->
                                 <div class="comment_container">
                                     <div class="comment_form_container">
@@ -115,7 +120,7 @@
                                                     <a class="comment_poster" href="">{{ comment.poster.first_name }} {{ comment.poster.last_name }}</a>
                                                     {% if comment.poster.id == cur_user.id %}
                                                     <div class="delete_comment_btn">
-                                                        <a href="/delete/comment/{{comment.id}}">Delete</a>
+                                                        <a id="delete_com" href="/delete/comment/{{comment.id}}">Delete</a>
                                                     </div>
                                                     {% endif %}
                                                 </div>

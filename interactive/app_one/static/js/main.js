@@ -42,13 +42,13 @@ $(".comment_container").on('submit', '.comment_form', function(e){
     e.preventDefault();
     let post_id = $(this).attr('post_id')
     let data = $(this).serialize();
-    let thisForm = $(this);
+    var thisForm = $(this);
     $.ajax({
         method: 'POST',
         data: data,
         url: '/post_comment'
     }).done(function(res){
-        thisForm.siblings('.display_comments_container').html(res)
+        $('.display_comments_container').html(res)
         $(`.${post_id}display`).show()
         $(`.${post_id}paragraph`).html("Hide comments")
         thisForm[0].reset();
@@ -72,32 +72,46 @@ $('.show_comments').click(function(){
 })
 
 
-// $('body').on('click','#like',function(e){
-//     e.preventDefault()
-//     post_id=$(this).attr('post_id')
-//     $.ajax({
-//         url:`/like/${post_id}`,
-//         method:'get',
-//         success: function(response)
-//         {
-//             console.log(response);
-//             $('.all_posts_container').html(response)
-//         }
-//     })
-// })
-// $('body').on('click', '#unlike',function(e){
-//     e.preventDefault()
-//     post_id=$(this).attr('post_id')
-//     $.ajax({
-//         url:`/unlike/${post_id}`,
-//         method:'get',
-//         success: function(response)
-//         {
-//             console.log(response);
-//             $('.all_posts_container').html(response)
-//         }
-//     })
-// })
+
+// Likes
+$('body').on('click','.unlike',function(e){
+    e.preventDefault()
+    let path = $(this).attr('href')
+    var this_var = $(this)
+    var needed_html = $(this).html()
+    if(needed_html == 'Unlike'){
+        $(this).html('Like')
+    }else{
+        $(this).html('Unlike')
+    }
+    $.ajax({
+        url:path,
+        method:'get',
+        success: function(response)
+{
+            this_var.attr('href',  this_var.attr('href2'))
+            this_var.attr('href2', path)
+            $('.likess').html(response)
+        }
+    })
+})
+
+
+// Delete post comment
+$('body').on('click','#delete_com',function(e){
+    e.preventDefault()
+    let path = $(this).attr('href')
+    $.ajax({
+        url:path,
+        method:'get',
+        success: function(response){
+            $('.display_comments_container').html(response)
+        }
+    })
+})
+
+
+
 
 
 
