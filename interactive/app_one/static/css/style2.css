@@ -35,11 +35,11 @@ li {
 }
 
 a {
-  color: #4177b1;
+  color: #17a2b8;
 }
 
 .green {
-  color: #4177b1;
+  color: #17a2b8;
 }
 
 .outer_container {
@@ -50,8 +50,8 @@ a {
 }
 
 .btn-outline-info {
-  color: #4177b1;
-  border-color: #4177b1;
+  color: #17a2b8;
+  border-color: #17a2b8;
 }
 
 .btn-outline-info:hover {
@@ -63,7 +63,7 @@ a {
 #search_bar_container {
   width: 100%;
   height: 70px;
-  background-color: #4177b1;
+  background-color: #17a2b8;
 }
 
 #search_bar_container #search_bar {
@@ -187,7 +187,7 @@ a {
   display: -ms-flexbox;
   display: flex;
   font-size: 14px;
-  color: #4177b1;
+  color: #17a2b8;
 }
 
 #navigation li a ion-icon {
@@ -216,13 +216,13 @@ a {
 .main_container .page_title_container {
   padding: 10px;
   text-align: center;
-  color: #4177b1;
+  color: #17a2b8;
   font-weight: 900;
 }
 
 .main_container .page_title_container a {
   font-weight: 400;
-  color: #4177b1;
+  color: #17a2b8;
 }
 
 .all_posts_container {
@@ -355,7 +355,7 @@ a {
 .post_container .comment_container .show_comments {
   font-size: 12px;
   margin-top: 10px;
-  color: #4177b1;
+  color: #17a2b8;
   cursor: pointer;
 }
 
@@ -405,7 +405,7 @@ a {
 }
 
 .post_container .comment_container .display_comments_container .display_comment .comment_content .comment_content_header .comment_poster {
-  color: #4177b1;
+  color: #17a2b8;
   margin-bottom: 0;
   padding-bottom: 0;
 }
@@ -435,7 +435,7 @@ a {
 
 #sidebar_container li a {
   font-size: 14px;
-  color: #4177b1;
+  color: #17a2b8;
 }
 
 #sidebar_container li a ion-icon {
@@ -491,7 +491,7 @@ a {
   padding: 5px 10px;
   font-weight: bold;
   border-radius: 5px;
-  color: #4177b1;
+  color: #17a2b8;
 }
 
 .profile_page_container .avatar_img .profile_info {
@@ -503,7 +503,7 @@ a {
 }
 
 .profile_page_container .avatar_img .profile_info .update_profile_btn_container .update_profile_btn {
-  color: #4177b1;
+  color: #17a2b8;
   font-weight: bold;
 }
 
@@ -556,7 +556,7 @@ a {
 #song_post_btn,
 #video_post_btn,
 #cancel_post_btn {
-  color: #4177b1;
+  color: #17a2b8;
   cursor: pointer;
 }
 
@@ -766,7 +766,7 @@ a {
 .chat_form_container .chat_form .emoji_container .send_mess_button #send_message_icon ion-icon {
   padding-left: 10px;
   font-size: 24px;
-  color: #4177b1;
+  color: #17a2b8;
 }
 
 .search_user_container {
@@ -790,7 +790,7 @@ a {
 .search_user_container form .search_bar2 {
   width: 476px;
   margin-right: 14px;
-  border: 1px solid #4177b1;
+  border: 1px solid #17a2b8;
   border-radius: 5px;
   outline: none;
   padding: 2px 0 2px 10px;
@@ -845,7 +845,7 @@ a {
 }
 
 .all_users_container .one_user_container .one_user_name_container .one_user_message a {
-  color: #4177b1;
+  color: #17a2b8;
   font-size: 14px;
 }
 
@@ -870,7 +870,7 @@ a {
       -ms-flex-pack: center;
           justify-content: center;
   min-height: 8vh;
-  color: #4177b1;
+  color: #17a2b8;
   letter-spacing: 0.4px;
 }
 
@@ -927,4 +927,4 @@ label {
   display: inline-block;
   margin: 10px;
 }
-/*# sourceMappingURL=style.css.map */
+/*# sourceMappingURL=style2.css.map */

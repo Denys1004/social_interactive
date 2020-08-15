@@ -145,17 +145,31 @@ class PostManager(models.Manager):
             poster = poster_obj,
             post_image = fileData['files']
         )
+        
+    def create_music_post(self, postData, fileData, poster_obj):
+        # manage name of the file to prevent conflict
+        file_name = fileData['song'].name   #saving filename .name is like .png
+        new_name = f"{file_name.split('.')[0]}-{uuid.uuid4().hex}.{file_name.split('.')[-1]}" # adding random string to the name
+        fileData['song'].name = new_name    # reassigning the existing name to new name
+        return self.create(
+            content = postData['content'],
+            poster = poster_obj,
+            post_song = fileData['song'],
+        )
 
 class Post(models.Model):
     content = models.TextField()
     post_image = models.ImageField(upload_to='post_images', default=None, blank=True, null = True)
+    post_song = models.FileField(upload_to='music', default=None, blank=True, null = True)
     poster = models.ForeignKey(User, related_name = 'poster', on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name = 'posts_liked')
     created_at = models.DateTimeField(auto_now_add = True)  								
     updated_at = models.DateTimeField(auto_now = True)	
     objects = PostManager()
+    # def __str__(self):
+    #     return self.title if self.title else  'no-title, post of:  ' + self.poster.first_name + ' ' + self.poster.last_name
     def __str__(self):
-        return self.title if self.title else  'no-title, post of:  ' + self.poster.first_name + ' ' + self.poster.last_name
+        return self.content[:20]
 
 class Category(models.Model):
     name = models.CharField(max_length = 255)

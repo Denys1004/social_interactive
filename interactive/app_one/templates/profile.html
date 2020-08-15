@@ -60,6 +60,8 @@
                                     <p id ='image_post_btn'>Add Image Post</p>
                                     <p class="devider"> | </p>
                                     <p id ='video_post_btn'>Add Video Post</p>
+                                    <p class="devider"> | </p>
+                                    <p id ='song_post_btn'>Add Music Post</p>
                                 </div>
                             </div>
 
@@ -89,7 +91,7 @@
                                         <input type="text" name="content" class="form-control" class="post_content">
                                     </div>
                                     <div class="form-group">
-                                        <label for="files">Files:</label>
+                                        <label for="files">Image:</label>
                                         <input type="file" id="files" class="form-control" name="files">
                                     </div>
                                     <div class="buttons_container">
@@ -100,6 +102,28 @@
                                     </div>
                                 </form>
                             </div>
+
+                            <!-- music_post -->
+                            <div id="music_post">
+                                <form action="/create_post/music" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="content">Title:</label>
+                                        <input type="text" name="content" class="form-control" class="post_content">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="song">mp3 file:</label>
+                                        <input type="file" name="song" id="song" class="form-control" accept=".mp3">
+                                    </div>
+                                    <div class="buttons_container">
+                                        <button class="btn btn-outline-info">Post</button>
+                                        <div class="cancel_post">
+                                            <a href="/user/{{ user.id }}/profile" class="btn btn-info">Cancel</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
                             <!-- video_post -->
                             <div id="video_post">
                                 <form action="/create_post/video" method="POST" enctype="multipart/form-data">
@@ -109,7 +133,7 @@
                                         <input type="text" name="content" class="form-control" class="post_content" >
                                     </div>
                                     <div class="form-group">
-                                        <label for="video_item">Video URL:</label>
+                                        <label for="video_item">Video link:</label>
                                         <input type="url" name="video_item" class="form-control" id="video_item">
                                     </div>
                                     <div class="buttons_container">
@@ -161,6 +185,19 @@
                                 {% if post.post_image %}
                                 <div class="post_image_container">
                                     <img src="{{ MEDIA_URL }}{{ post.post_image }}" alt="">
+                                </div>
+                                {% endif %}
+
+                                <!-- if post has an music, display this: -->
+                                {% if post.post_song %}
+                                <div class="post_song_container">
+                                    <div class="player-box">
+                                        <audio controls>
+                                            <!-- <source src="{{ MEDIA_URL }}{{ post.post_song }}" type="audio/ogg"> -->
+                                            <source src="{{ MEDIA_URL }}{{ post.post_song }}" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    </div>
                                 </div>
                                 {% endif %}
                     

@@ -17,73 +17,8 @@
                     <div class="page_title_container">
                         <h4>News</h4>
                     </div>
-                    <div class="all_posts_container">
-                        <div class="which_form">
-                            <p id ='text_post_btn'>Add Text Post</p>
-                            <p class="devider"> | </p>
-                            <p id ='image_post_btn'>Add Image Post</p>
-                            <p class="devider"> | </p>
-                            <p id ='video_post_btn'>Add Video Post</p>
-                        </div>
-                    </div>
 
-                    <!-- text_post -->
-                    <div id="text_post">
-                        <form action="/create_post/text" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="content">Post:</label>
-                                <textarea name="editor1" class="form-control post_content"></textarea>
-                            </div>
-                            <div class="buttons_container">
-                                <button class="btn btn-outline-info">Post</button>
-                                <div class="cancel_post">
-                                    <a href="" class="btn btn-info">Cancel</a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-            
-                    <!-- image_post -->
-                    <div id="image_post">
-                        <form action="/create_post/image" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="content">Description:</label>
-                                <input type="text" name="content" class="form-control" class="post_content">
-                            </div>
-                            <div class="form-group">
-                                <label for="files">Files:</label>
-                                <input type="file" id="files" class="form-control" name="files">
-                            </div>
-                            <div class="buttons_container">
-                                <button class="btn btn-outline-info">Post</button>
-                                <div class="cancel_post">
-                                    <a href="" class="btn btn-info">Cancel</a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- video_post -->
-                    <div id="video_post">
-                        <form action="/create_post/video" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="content">Description:</label>
-                                <input type="text" name="content" class="form-control" class="post_content" >
-                            </div>
-                            <div class="form-group">
-                                <label for="video_item">Video URL:</label>
-                                <input type="url" name="video_item" class="form-control" id="video_item">
-                            </div>
-                            <div class="buttons_container">
-                                <button class="btn btn-outline-info">Post</button>
-                                <div class="cancel_post">
-                                    <a href="" class="btn btn-info">Cancel</a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                    <div class="all_posts_container">
                         {% for post in posts %}
                             <div class="post_container">
                                 <div class="post_header">
@@ -94,6 +29,11 @@
                                         <a href="/user/{{ post.poster.id }}/profile" class="poster_name">{{ post.poster.first_name }} {{ post.poster.last_name }}</a>
                                         <small>{{ post.created_at }}</small>
                                     </div>
+                                    {% if post.poster.id == cur_user.id %}
+                                    <div class="delete_post_btn">
+                                        <a href="/delete/post/{{post.id}}">Delete</a>
+                                    </div>
+                                    {% endif %}
                                 </div>
 
                                 {% if post.title %}
@@ -115,6 +55,24 @@
                                 </div>
                                 {% endif %}
 
+                                <!-- if post has an music, display this: -->
+                                {% if post.post_song %}
+                                <div class="post_song_container">
+                                    <div class="player-box">
+                                        <audio controls>
+                                            <!-- <source src="{{ MEDIA_URL }}{{ post.post_song }}" type="audio/ogg"> -->
+                                            <source src="{{ MEDIA_URL }}{{ post.post_song }}" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+         
+
+           
+
+                                <!-- create like -->
                                 <div class="like">
                                     <p class="likess">{{post.likes.count}}</p>
                                     <ion-icon name="heart"></ion-icon>
@@ -124,8 +82,8 @@
                                     <a id="like" post_id='{{post.id}}' href="/like/{{post.id}}">Like</a>
                                     {% endif %}
                                 </div>
-                     
-
+                        
+                                <!-- create comment -->
                                 <div class="comment_container">
                                     <div class="comment_form_container">
                                         <form action="/add_comment/post/{{ post.id }}" class="comment_form" method="POST" post_id="{{post.id}}">
@@ -140,12 +98,12 @@
                                         </form>
                                     </div>
 
-
                                     <!-- if post has comments show this: -->
                                     {% if post.comments.all %}
                                     <p post_id="{{post.id}}" class="show_comments {{post.id}}paragraph">Show comments...</p>
                                     {% endif %}
 
+                                    <!-- display comments -->
                                     <div class="display_comments_container {{post.id}}display">
                                         {% for comment in post.comments.all %}
                                         <div class="display_comment">
@@ -153,7 +111,14 @@
                                                 <a href="/user/{{ comment.poster.id }}/profile"><img src="{{ MEDIA_URL }}{{ comment.poster.avatar }}" alt=""></a>
                                             </div>
                                             <div class="comment_content">
-                                                <a class="comment_poster" href="">{{ comment.poster.first_name }} {{ comment.poster.last_name }}</a>
+                                                <div class="comment_content_header">
+                                                    <a class="comment_poster" href="">{{ comment.poster.first_name }} {{ comment.poster.last_name }}</a>
+                                                    {% if comment.poster.id == cur_user.id %}
+                                                    <div class="delete_comment_btn">
+                                                        <a href="/delete/comment/{{comment.id}}">Delete</a>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
                                                 <p class="comment_text">{{ comment.comment }}</p>
                                                 <small>{{ comment.created_at }}</small>
                                             </div>
@@ -161,14 +126,10 @@
                                         <hr>
                                         {% endfor %}
                                     </div>
-
-
-
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
-    
                 </div>
     
                 {% include 'sidebar.html' %}

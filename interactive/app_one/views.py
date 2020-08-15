@@ -29,7 +29,6 @@ def create_user(request):
         new_user = User.objects.registration(request.POST)
         request.session.clear()
         request.session['user_id'] = new_user.id
-        request.session['initials'] = new_user.first_name[0] + new_user.last_name[0]
         return redirect('/dashboard')
 
 def login(request):
@@ -45,7 +44,6 @@ def login(request):
             request.session.clear()
             user = User.objects.get(email = request.POST['email'])
             request.session['user_id'] = user.id
-            request.session['initials'] = user.first_name[0] + user.last_name[0]
             return redirect('/dashboard')
 
 def logout(request):
@@ -85,7 +83,6 @@ def dashboard(request):
     context = {
         'cur_user': User.objects.get(id = request.session['user_id']),
         'posts': Post.objects.all().order_by('-created_at'),
-        'videos': Video_item.objects.all()
     }
     return render(request, 'dashboard.html', context)
 
@@ -106,8 +103,11 @@ def create_post(request, post_type):
     elif post_type=='video':
         new_post=Post.objects.create(content = request.POST['content'], poster = poster)
         Video_item.objects.create(video = request.POST['video_item'], post = new_post, video_poster = poster )
-    return redirect('/dashboard')
-    
+    elif post_type=='music':
+        new_post = Post.objects.create_music_post(request.POST, request.FILES, poster)
+    return redirect(f'/user/{poster.id}/profile')
+
+
 def add_comment(request, post_id):
     needed_post = Post.objects.get(id = post_id)
     comment_poster = User.objects.get(id = request.session['user_id'])
@@ -222,7 +222,6 @@ def chat(request, conv_id, receiver_id):
             cur_user.save()
             for message in new_messages:        #remove all new messages from inbox
                 cur_user.inbox.remove(message)
-
         context = {
             'cur_user': cur_user,
             'conversation': conversation,
@@ -246,3 +245,42 @@ def chat(request, conv_id, receiver_id):
             'receiver': receiver
         }
         return render(request, 'chat.html', context)
+
+def music(request):
+    cur_user = User.objects.get(id = request.session['user_id'])
+    all_posts = Post.objects.exclude(poster = cur_user )
+    context = {
+        'cur_user':cur_user,
+        'all_posts':all_posts
+    }
+    return render(request, 'music.html', context)
+
+def images(request):
+    cur_user = User.objects.get(id = request.session['user_id'])
+    all_posts = Post.objects.exclude(poster = cur_user )
+    context = {
+        'cur_user':cur_user,
+        'all_posts':all_posts
+    }
+    return render(request, 'images.html', context)
+
+
+def video(request):
+    cur_user = User.objects.get(id = request.session['user_id'])
+    all_posts = Post.objects.exclude(poster = cur_user )
+    context = {
+        'cur_user':cur_user,
+        'all_posts':all_posts
+    }
+    return render(request, 'video.html', context)
+
+
+def delete_post(request, post_id):
+    to_delete = Post.objects.get(id = post_id)
+    to_delete.delete()
+    return redirect('/dashboard')
+
+def delete_comment(request, comment_id):
+    to_delete = Comment.objects.get(id = comment_id)
+    to_delete.delete()
+    return redirect('/dashboard')

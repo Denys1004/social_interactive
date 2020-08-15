@@ -1,0 +1,41 @@
+{% load embed_video_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Profile</title>
+</head>
+<body>
+    <div class="outer_container">
+        {% include 'search.html' %}
+
+        <div class="inner_container">
+            <div class="inner">
+                {% include 'navbar.html' %}
+    
+                <div class="main_container">
+                    <div class="page_title_container">
+                        <h4>My Images</h4>
+                    </div>
+                
+                    <div class="my_image_container">
+                        {% for eachpost in cur_user.poster.all %}
+                            {% if eachpost.post_image %}
+                                <div class="image_box">
+                                    <img class="all_images" src="{{ MEDIA_URL }}{{ eachpost.post_image }}" alt="">
+                                </div>
+                            {% endif%}
+                        {% endfor %}
+                    </div>
+
+
+    
+                </div>
+    
+                {% include 'sidebar.html' %}
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </div>
+</body>
+</html>
