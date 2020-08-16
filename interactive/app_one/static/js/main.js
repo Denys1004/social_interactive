@@ -1,3 +1,15 @@
+// $('#color_teal').click(function(){
+//     let css_1_Path = $('#css_style').attr('href'); 
+//     $('#css_style').attr('href', css_1_Path)
+// })
+
+// $('#color_blue').click(function(){
+//     let css_2_Path = $('#css_style').attr('alt_src2');
+//     $('#css_style').attr('href', css_2_Path)
+// })
+
+
+
 
 // Show Form for submitt post
 $('#image_post_btn').click(function(){
@@ -111,10 +123,6 @@ $('body').on('click','#delete_com',function(e){
 })
 
 
-
-
-
-
 // Chat keep scrolled down
 function updateScroll(){
     var element = document.getElementById("chat_container");
@@ -136,3 +144,6 @@ picker.on('emoji', function(emoji){
 emoji_btn.addEventListener('click', function(){
     picker.pickerVisible ? picker.hidePicker() : picker.showPicker(emoji_btn);
 })
+
+
+

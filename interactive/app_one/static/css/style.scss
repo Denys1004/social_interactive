@@ -1,5 +1,5 @@
-// $button_color: #17a2b8;
-$button_color: #4177b1;
+$button_color: #17a2b8;
+// $button_color: #4177b1;
 $teal_opacity:#93d4de3d;
 $bg_color:rgb(238, 238, 238);
 $white: #fff;
@@ -55,8 +55,7 @@ a{
     border-color: $button_color;
     &:hover{
         color:$white;
-        border-color: $dark_grey;
-        background-color: $dark_grey;
+        background-color: $button_color;
     }
 }
 // Search bar container
@@ -74,6 +73,7 @@ a{
         .logo_container{
             flex:1;
             color: $white;
+            padding-bottom: 18px;
             .logotip{
                 font-weight: 900;
             }
@@ -368,6 +368,38 @@ a{
             ion-icon {
                 padding-left: 6px;
                 padding-top: 3px;
+            }
+        }
+        .colors_css{
+            display: flex;
+            justify-content: flex-end;
+            #color_teal{
+                margin-left: 6px;
+                cursor: pointer;
+                ion-icon {
+                    color: rgb(78, 165, 139);
+                }
+            }
+            #color_blue{
+                margin-left: 6px;
+                cursor: pointer;
+                ion-icon {
+                    color: rgb(45, 37, 131);
+                }
+            }
+            #color_green{
+                margin-left: 6px;
+                cursor: pointer;
+                ion-icon {
+                    color: rgb(31, 123, 26);
+                }
+            }
+            #color_red{
+                margin-left: 6px;
+                cursor: pointer;
+                ion-icon {
+                    color: rgb(150, 26, 26);
+                }
             }
         }
     }
@@ -745,18 +777,27 @@ label{
     font-size: 14px;
 }
 .form-control {
-    font-size: 0.8rem;
+    // font-size: 0.8rem;
     height: calc(1.5em + .75rem + 2px);
     padding: 3px;
+    height: 34px;
 }
 
 
 // Music
 .music_container{
     padding: 10px;
-    small{
-        padding-left: 10px;
+    text-align: center;
+    .player-box{
+        padding: 10px;
+        small{
+            padding-left: 10px;
+        }
+        audio{
+            text-align: center;
+        }
     }
+
 }
 
 

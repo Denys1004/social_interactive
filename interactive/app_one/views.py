@@ -4,7 +4,7 @@ from django.contrib import messages
 import bcrypt, json
 from datetime import datetime
 from django.core.paginator import Paginator
-
+from django.db.models import Q
 from django.forms.models import model_to_dict
 
 #User functions_____________________________________________________________________________________________________________________#
@@ -216,7 +216,6 @@ def chat(request, conv_id, receiver_id):
     receiver = User.objects.get(id = receiver_id)
 
     if request.method == "GET":
-        
         #receiver has read conversation remove all messages in this conversation from has_message count
         if(cur_user.has_message>0):
             new_messages=cur_user.inbox.all().filter(conversation=conversation) #filter all messages in users inbox by conversation that was clicked
@@ -269,10 +268,10 @@ def images(request):
 
 def video(request):
     cur_user = User.objects.get(id = request.session['user_id'])
-    all_posts = Post.objects.exclude(poster = cur_user )
+    all_videos = Video_item.objects.exclude(video_poster = cur_user)
     context = {
         'cur_user':cur_user,
-        'all_posts':all_posts
+        'all_videos':all_videos
     }
     return render(request, 'video.html', context)
 
@@ -294,3 +293,13 @@ def delete_comment(request, comment_id):
         'videos': Video_item.objects.all()
     }
     return render(request, 'comments_partial.html', context)
+
+
+def zapros(request):
+    zapros = request.GET['zapros']
+    result = User.objects.filter(Q(first_name__icontains=zapros,) | Q(last_name__icontains = zapros))
+    context = {
+        'zapros':zapros,
+        'result': result
+    }
+    return render(request, 'zapros.html', context)

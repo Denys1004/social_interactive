@@ -18,13 +18,17 @@
                         <h4>{{user.first_name}}'s profile</h4>
                     </div>
                     
-
                     <div class="profile_page_container">
                         <div class="avatar_img">
                             <div class="box">
-                                <img src="{{ MEDIA_URL }}{{ user.avatar }}" class="image" alt="{{ post.poster.first_name}}'s avatar">
+
+                                <div class="tz-gallery">
+                                    <a class="lightbox" href="{{ MEDIA_URL }}{{ user.avatar }}">
+                                        <img src="{{ MEDIA_URL }}{{ user.avatar }}" class="image" alt="{{ post.poster.first_name}}'s avatar">
+                                    </a>
+                                </div>
                                 {% if cur_user.id != user.id %}
-                                <a href="/send_to/{{user.id}}" class="send_mess_btn">Send Message to {{user.first_name}}</a>
+                                <a href="/send_to/{{user.id}}" class="send_mess_btn">Send Message</a>
                                 {% endif %}
                             </div>
                             
@@ -146,8 +150,6 @@
                             </div>
                         {% endif %}
                 
-                
-                    
                         <br>
                         <h5 class="text-center">All {{user.first_name}}'s Posts</h5>
                         <!-- if user doesn't have posts display this:-->
@@ -155,8 +157,6 @@
                         <p class="no_provided text-center">{{ user.first_name }} doesn't have posts yet</p>
                         {% endif %}
                         
-                        
-      
                         {% for post in user_posts %}
                             <div class="post_container">
                                 <div class="post_header">
@@ -184,7 +184,13 @@
                                 <!-- if post has an image, display this: -->
                                 {% if post.post_image %}
                                 <div class="post_image_container">
-                                    <img src="{{ MEDIA_URL }}{{ post.post_image }}" alt="">
+                                    <div class="tz-gallery">
+                                        <div class="image_box">
+                                            <a class="lightbox" href="{{ MEDIA_URL }}{{ post.post_image }}">
+                                                <img class="all_images" src="{{ MEDIA_URL }}{{ post.post_image }}" alt="">
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                                 {% endif %}
 
@@ -201,7 +207,6 @@
                                 </div>
                                 {% endif %}
                     
-
                                 <div class="comment_container">
                                     <div class="comment_form_container">
                                         <form action="/add_comment/post/{{ post.id }}" class="comment_form" method="POST" post_id="{{post.id}}">
@@ -215,7 +220,6 @@
                                             </div>
                                         </form>
                                     </div>
-
 
                                     <!-- if post has comments show this: -->
                                     {% if post.comments.all %}
@@ -237,16 +241,11 @@
                                         <hr>
                                         {% endfor %}
                                     </div>
-
-
-
                                 </div>
                             </div>
                         {% endfor %}
-
-                        
                     </div>
-    
+                    
                 </div>
     
                 {% include 'sidebar.html' %}

@@ -21,17 +21,28 @@
                     <div class="my_video_container">
                         <div class="video_holder">
                             {% for video in cur_user.video_poster.all %}
-                            {% if video.video %}
-                                <div class="video_box">
-                                    {% video video.video '250x200' %}		
-                                </div>
-                            {% endif%}
-                        {% endfor %}
+                                {% if video.video %}
+                                    <div class="video_box">
+                                        {% video video.video '250x200' %}		
+                                    </div>
+                                {% endif%}
+                            {% endfor %}
                         </div>
                     </div>
 
                     <div class="page_title_container">
                         <h4>All Videos</h4>
+                    </div>
+                    <div class="my_video_container">
+                        <div class="video_holder">
+                            {% for video in all_videos %}
+                                {% if video.video %}
+                                    <div class="video_box">
+                                        {% video video.video '250x200' %}		
+                                    </div>
+                                {% endif%}
+                            {% endfor %}
+                        </div>
                     </div>
 
 

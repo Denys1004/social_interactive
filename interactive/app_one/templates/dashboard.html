@@ -48,12 +48,27 @@
                                 </div>
                                 {% endfor %}
 
+                                <div class="tz-gallery">
+                                    <div class="image_box">
+                                        <a class="lightbox" href="{{ MEDIA_URL }}{{ eachpost.post_image }}">
+                                            <img class="all_images" src="{{ MEDIA_URL }}{{ eachpost.post_image }}" alt="">
+                                        </a>
+                                    </div>
+                                </div>
+
                                 <!-- if post has an image, display this: -->
                                 {% if post.post_image %}
                                 <div class="post_image_container">
-                                    <img src="{{ MEDIA_URL }}{{ post.post_image }}" alt="">
+                                    <div class="tz-gallery">
+                                        <div class="image_box">
+                                            <a class="lightbox" href="{{ MEDIA_URL }}{{ post.post_image }}">
+                                                <img class="all_images" src="{{ MEDIA_URL }}{{ post.post_image }}" alt="">
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                                 {% endif %}
+
 
                                 <!-- if post has an music, display this: -->
                                 {% if post.post_song %}
@@ -68,10 +83,6 @@
                                 </div>
                                 {% endif %}
 
-         
-
-           
-
                                 <!-- create like -->
                                 <div class="like">
                                     <p class="likess">{{post.likes.count}}</p>
@@ -83,11 +94,6 @@
                                     {% endif %}
                                 </div>
                         
-
-
-
-
-
                                 <!-- create comment -->
                                 <div class="comment_container">
                                     <div class="comment_form_container">
