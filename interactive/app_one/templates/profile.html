@@ -209,6 +209,17 @@
                                     </div>
                                 </div>
                                 {% endif %}
+
+                                <!-- create like -->
+                                <div class="like">
+                                    <p class="{{post.id}} likess">{{post.likes.count}}</p>
+                                    <ion-icon name="heart"></ion-icon>
+                                    {% if cur_user in post.likes.all %}
+                                    <a class="unlike" post_id='{{post.id}}' href="/unlike/{{post.id}}" href2="/like/{{post.id}}">Unlike</a>
+                                    {% else %}
+                                    <a class="unlike" post_id='{{post.id}}' href="/like/{{post.id}}" href2="/unlike/{{post.id}}">Like</a>
+                                    {% endif %}
+                                </div>
                     
                                 <div class="comment_container">
                                     <div class="comment_form_container">

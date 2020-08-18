@@ -145,29 +145,39 @@ $('body').on('submit','.chat_form',function(e){
 })
 
 // Ajax check for new messages
+// $('body').on('submit','.chat_form',function(e){
 function check_for_mess(){
     var mess_id = $('.last').attr('mess_id')
+    // console.log(mess_id);
     $.ajax({
         url: `/check_mess/${mess_id}`,
         method:'get',
+        async: false,
         success: function(response){
-            console.log(response);
             response = JSON.parse(response)
-            for(mess in response){
+
+            for(mess of response){
+                var name = mess['name'][0]
+                var avatar = mess['avatar'][0]
+                var message = mess['message'][0]
+                var time = mess['time'][0]
+                var poster_id = mess['poster_id']
+                var mess_id = mess['mess_id']
+
                 $('.last').attr('class', "chat_message_container")
                 $('#chat_container').append(
-                    `<div class="chat_message_container last" mess_id ="{{message.id}}">
+                    `<div class="chat_message_container last" mess_id =${mess_id}>
                         <div class="chat_message">
                             <div class="chat_avatar">
-                                <a href="/user/${mess.poster_id}/profile" ><img src="/media/${mess.avatar}" alt=""></a>
+                                <a href="/user/${poster_id}/profile" ><img src="/media/${avatar}" alt=""></a>
                             </div>
                             <div class="chat_content_container">
                                 <div class="chat_content_header">
-                                    <a href="/user/${mess.poster_id}/profile">${mess.name}</a>
-                                    <small>${mess.time}</small>
+                                    <a href="/user/${poster_id}/profile">${name}</a>
+                                    <small>${time}</small>
                                 </div>
                                 <div class="chat_content_body">
-                                    <p>${mess.message}</p>
+                                    <p>${message}</p>
                                 </div>
                             </div>
                         </div>
@@ -220,4 +230,12 @@ emoji_btn.addEventListener('click', function(){
 })
 
 
+
+// [{
+//     "name": ["Veta Romanchenko"], 
+//     "avatar": ["avatars/veta.jpg-32411016f1194067905bc758b1dd819f.jpg"], 
+//     "message": ["dsgfgsdf"], 
+//     "time": ["Aug 18, 02:43AM"], 
+//     "poster_id": "2"
+// }]
 

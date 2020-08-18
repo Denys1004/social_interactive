@@ -367,16 +367,18 @@ def check_mess(request, mess_id):
     # User.objects.filter(userprofile__level__gte=0)
     all_new_mess = all_messages.filter(id__gt = int(mess_id))
     if len(all_new_mess)  == 0:
-        return HttpResponse('no new mess')
+        return HttpResponse(json.dumps([]), content_type = 'application/json')
     else:
         response = []
         for new_mess in all_new_mess:
             message = {}
-            message['name'] = (f'{new_mess.poster.first_name} {new_mess.poster.last_name}'),
-            message['avatar'] = (str(new_mess.poster.avatar)),
-            message['message'] = (new_mess.content),
-            message['time'] = (new_mess.created_at.strftime('%b %d, %I:%M%p')),
-            message['poster_id'] = (f'{new_mess.poster.id}')
+            message['name'] = f'{new_mess.poster.first_name} {new_mess.poster.last_name}',
+            message['avatar'] = str(new_mess.poster.avatar),
+            message['message'] = new_mess.content,
+            message['time'] = new_mess.created_at.strftime('%b %d, %I:%M%p'),
+            message['poster_id'] = f'{new_mess.poster.id}',
+            message['mess_id'] = new_mess.id
+
             response.append(message)
        
         return HttpResponse(json.dumps(response))
