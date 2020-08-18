@@ -29,5 +29,7 @@ urlpatterns = [
     path('send_to/<int:user_id>', views.send_message),
     path('chat/<int:conv_id>/<int:receiver_id>', views.chat),
 
+    path('check_mess/<int:mess_id>', views.check_mess),
+
     path('logout', views.logout)
 ]

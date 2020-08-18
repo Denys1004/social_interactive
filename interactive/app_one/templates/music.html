@@ -18,15 +18,11 @@
                         <h4>My Songs</h4>
                     </div>
                 
-                    <div class="music_container">
+                    <div class="users_music_container">
                         {% for eachpost in cur_user.poster.all %}
                             {% if eachpost.post_song %}
                                 <div class="player-box">
-                                    {% if len.eachpost.content > 0 %}
                                     <small>{{ eachpost.content|slice:":20"}}</small>
-                                    {% else %}
-                                    <small>Unknown</small>
-                                    {% endif %}
                                     <audio controls>
                                         <source src="{{ MEDIA_URL }}{{ eachpost.post_song }}" type="audio/mpeg">
                                         Your browser does not support the audio element.
@@ -40,19 +36,16 @@
                     <div class="page_title_container">
                         <h4>Music</h4>
                     </div>
-                    <div class="music_container">
+                    <div class="users_music_container">
                         {% for eachpost in all_posts %}
                             {% if eachpost.post_song %}
                                 <div class="player-box">
-                                    {% if eachpost.content %}
                                     <small>{{ eachpost.content|slice:":20"}}</small>
-                                    {% else %}
-                                    <small>Unknown</small>
-                                    {% endif %}
                                     <audio controls>
                                         <source src="{{ MEDIA_URL }}{{ eachpost.post_song }}" type="audio/mpeg">
                                         Your browser does not support the audio element.
                                     </audio>
+                                
                                 </div>
                                 <hr>
                             {% endif%}

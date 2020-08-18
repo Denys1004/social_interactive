@@ -151,10 +151,13 @@ class PostManager(models.Manager):
         file_name = fileData['song'].name   #saving filename .name is like .png
         new_name = f"{file_name.split('.')[0]}-{uuid.uuid4().hex}.{file_name.split('.')[-1]}" # adding random string to the name
         fileData['song'].name = new_name    # reassigning the existing name to new name
-        # if 'content' in postData:
-        #     content = postData['content']
-        # else: 
-        #     content = "Unknown"
+        if len(postData['content']) == 0:
+            content = 'Unknown Artist'
+            return self.create(
+                content = content,
+                poster = poster_obj,
+                post_song = fileData['song'],
+            )
 
         return self.create(
             content = postData['content'],
@@ -165,7 +168,7 @@ class PostManager(models.Manager):
 class Post(models.Model):
     content = models.TextField()
     post_image = models.ImageField(upload_to='post_images', default=None, blank=True, null = True)
-    post_song = models.FileField(upload_to='music', default="Unknown", blank=True, null = True)
+    post_song = models.FileField(upload_to='music', default=None, blank=True, null = True)
     poster = models.ForeignKey(User, related_name = 'poster', on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name = 'posts_liked')
     created_at = models.DateTimeField(auto_now_add = True)  								

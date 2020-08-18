@@ -33,10 +33,14 @@
                             </div>
                             
                             <div class="profile_info">
-                                <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                                <h4>{{ user.first_name }} {{ user.last_name }}</h4>
+                                {% if user.birth_date %}
                                 <p>Birthday: {{ user.birth_date }}</p>
+                                {% endif %}
                                 <p>Email: {{ user.email}}</p>
+                                {% if user.phone_num %}
                                 <p>Phone: {{ user.phone_num}}</p>
+                                {% endif %}
                                 {% if user.id == cur_user.id %}
                                 <div class="update_profile_btn_container">
                                     <a href="/update_profile/{{ user.id }}" class="update_profile_btn">Edit Profile</a>
@@ -45,7 +49,7 @@
                             </div>
                         </div>
                         <div class="about_user">
-                            <h5>About:</h5>
+                            <h4>About:</h4>
                             {% if user.about|length > 0 %}
                             <p>{{ user.about}}</p>
                             {% else %}
@@ -151,7 +155,7 @@
                         {% endif %}
                 
                         <br>
-                        <h5 class="text-center">All {{user.first_name}}'s Posts</h5>
+                        <h4 class="text-center">All {{user.first_name}}'s Posts</h4>
                         <!-- if user doesn't have posts display this:-->
                         {% if not user.poster.all  %}
                         <p class="no_provided text-center">{{ user.first_name }} doesn't have posts yet</p>
@@ -199,7 +203,6 @@
                                 <div class="post_song_container">
                                     <div class="player-box">
                                         <audio controls>
-                                            <!-- <source src="{{ MEDIA_URL }}{{ post.post_song }}" type="audio/ogg"> -->
                                             <source src="{{ MEDIA_URL }}{{ post.post_song }}" type="audio/mpeg">
                                             Your browser does not support the audio element.
                                         </audio>

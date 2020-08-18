@@ -48,14 +48,6 @@
                                 </div>
                                 {% endfor %}
 
-                                <div class="tz-gallery">
-                                    <div class="image_box">
-                                        <a class="lightbox" href="{{ MEDIA_URL }}{{ eachpost.post_image }}">
-                                            <img class="all_images" src="{{ MEDIA_URL }}{{ eachpost.post_image }}" alt="">
-                                        </a>
-                                    </div>
-                                </div>
-
                                 <!-- if post has an image, display this: -->
                                 {% if post.post_image %}
                                 <div class="post_image_container">
@@ -75,7 +67,6 @@
                                 <div class="post_song_container">
                                     <div class="player-box">
                                         <audio controls>
-                                            <!-- <source src="{{ MEDIA_URL }}{{ post.post_song }}" type="audio/ogg"> -->
                                             <source src="{{ MEDIA_URL }}{{ post.post_song }}" type="audio/mpeg">
                                             Your browser does not support the audio element.
                                         </audio>
@@ -85,7 +76,7 @@
 
                                 <!-- create like -->
                                 <div class="like">
-                                    <p class="likess">{{post.likes.count}}</p>
+                                    <p class="{{post.id}} likess">{{post.likes.count}}</p>
                                     <ion-icon name="heart"></ion-icon>
                                     {% if cur_user in post.likes.all %}
                                     <a class="unlike" post_id='{{post.id}}' href="/unlike/{{post.id}}" href2="/like/{{post.id}}">Unlike</a>

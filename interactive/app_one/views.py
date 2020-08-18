@@ -56,7 +56,10 @@ def user_profile(request, user_id):
     context = {
         'cur_user': User.objects.get(id = request.session['user_id']),
         'user':needed_user,
-        'user_posts':user_posts
+        'user_posts':user_posts,
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return render(request, 'profile.html', context)
 
@@ -65,7 +68,10 @@ def update_profile(request, user_id):
         cur_user=User.objects.get(id = user_id)
         cur_user.birth_date=str(cur_user.birth_date)
         context = {
-            'cur_user': cur_user
+            'cur_user': cur_user,
+            'all_available_posts': Post.objects.all(),
+            'all_users': User.objects.all(),
+            'all_videos': Video_item.objects.all()
         }
         return render(request, 'update_profile.html', context)
     else:
@@ -83,13 +89,19 @@ def dashboard(request):
     context = {
         'cur_user': User.objects.get(id = request.session['user_id']),
         'posts': Post.objects.all().order_by('-created_at'),
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return render(request, 'dashboard.html', context)
 
 def all_friends(request):
     context = {
         'all_users': User.objects.all(),
-        'cur_user': User.objects.get(id = request.session['user_id'])
+        'cur_user': User.objects.get(id = request.session['user_id']),
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return render(request, 'all_users.html', context)
 
@@ -123,7 +135,10 @@ def post_comment_with_ajax(request):
         'current_post_comments':all_posts_comments,
         'cur_user': User.objects.get(id = request.session['user_id']),
         'posts': Post.objects.all().order_by('-created_at'),
-        'videos': Video_item.objects.all()
+        'videos': Video_item.objects.all(),
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return render(request, 'comments_partial.html', context)
 
@@ -137,13 +152,19 @@ def add_like(request, post_id):
             'video_liked':video_liked,
             'posts': Post.objects.all().order_by('-created_at'),
             'videos': Video_item.objects.all(),
-            'cur_user': User.objects.get(id = request.session['user_id'])
+            'cur_user': User.objects.get(id = request.session['user_id']),
+            'all_available_posts': Post.objects.all(),
+            'all_users': User.objects.all(),
+            'all_videos': Video_item.objects.all()
         }
     post_liked.likes.add(user_liking)
     context = {
         'posts': Post.objects.all().order_by('-created_at'),
         'videos': Video_item.objects.all(),
-        'cur_user': User.objects.get(id = request.session['user_id'])
+        'cur_user': User.objects.get(id = request.session['user_id']),
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return HttpResponse(json.dumps(post_liked.likes.count()), content_type = 'application/json')
 
@@ -158,13 +179,19 @@ def remove_like(request, post_id):
             'video_liked':video_liked,
             'posts': Post.objects.all().order_by('-created_at'),
             'videos': Video_item.objects.all(),
-            'cur_user': User.objects.get(id = request.session['user_id'])
+            'cur_user': User.objects.get(id = request.session['user_id']),
+            'all_available_posts': Post.objects.all(),
+            'all_users': User.objects.all(),
+            'all_videos': Video_item.objects.all()
         }
     post_liked.likes.remove(user_liking)
     context = {
         'posts': Post.objects.all().order_by('-created_at'),
         'videos': Video_item.objects.all(),
-        'cur_user': User.objects.get(id = request.session['user_id'])
+        'cur_user': User.objects.get(id = request.session['user_id']),
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return HttpResponse(json.dumps(post_liked.likes.count()), content_type = 'application/json')
 
@@ -176,7 +203,10 @@ def send_message(request, user_id):
         context = {
             'cur_user': User.objects.get(id = request.session['user_id']),
             'receiver': receiver,
-            'sender': sender
+            'sender': sender,
+            'all_available_posts': Post.objects.all(),
+            'all_users': User.objects.all(),
+            'all_videos': Video_item.objects.all()
         }
         return render(request, 'send_message.html', context)
     else:
@@ -206,7 +236,10 @@ def display_messages(request):
     conversations = cur_user.conversations.all().order_by('-updated_at')
     context = {
         'cur_user': cur_user,
-        'conversations': conversations
+        'conversations': conversations,
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return render(request, 'display_conversations.html', context)
 
@@ -226,11 +259,16 @@ def chat(request, conv_id, receiver_id):
         context = {
             'cur_user': cur_user,
             'conversation': conversation,
-            'receiver': receiver
+            'receiver': receiver,
+            'all_available_posts': Post.objects.all(),
+            'all_users': User.objects.all(),
+            'all_videos': Video_item.objects.all()
         }
         return render(request, 'chat.html', context)
     else:
         #create new message
+        if len(request.POST['content']) < 1:
+            return redirect(f'/chat/{conv_id}/{receiver_id}')
         new_message = Message.objects.create(content = request.POST['content'],poster = cur_user, conversation=conversation)
         new_message.receivers.add(receiver)
         conversation.title = new_message.content
@@ -239,20 +277,25 @@ def chat(request, conv_id, receiver_id):
         #tells receiver they have a message
         receiver.has_message+=1
         receiver.save()
-
-        context = {
-            'cur_user': cur_user,
-            'conversation': conversation,
-            'receiver': receiver
+        response={
+            'name':f'{new_message.poster.first_name} {new_message.poster.last_name}',
+            'avatar':str(new_message.poster.avatar),
+            'message':new_message.content,
+            'time':new_message.created_at.strftime('%b %d, %I:%M%p'),
+            'poster_id': f'{new_message.poster.id}'
         }
-        return render(request, 'chat.html', context)
+
+        return HttpResponse(json.dumps(response))
 
 def music(request):
     cur_user = User.objects.get(id = request.session['user_id'])
     all_posts = Post.objects.exclude(poster = cur_user )
     context = {
         'cur_user':cur_user,
-        'all_posts':all_posts
+        'all_posts':all_posts,
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return render(request, 'music.html', context)
 
@@ -261,7 +304,10 @@ def images(request):
     all_posts = Post.objects.exclude(poster = cur_user )
     context = {
         'cur_user':cur_user,
-        'all_posts':all_posts
+        'all_posts':all_posts,
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return render(request, 'images.html', context)
 
@@ -271,7 +317,10 @@ def video(request):
     all_videos = Video_item.objects.exclude(video_poster = cur_user)
     context = {
         'cur_user':cur_user,
-        'all_videos':all_videos
+        'all_videos':all_videos,
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return render(request, 'video.html', context)
 
@@ -290,7 +339,10 @@ def delete_comment(request, comment_id):
         'current_post_comments':all_posts_comments,
         'cur_user': User.objects.get(id = request.session['user_id']),
         'posts': Post.objects.all().order_by('-created_at'),
-        'videos': Video_item.objects.all()
+        'videos': Video_item.objects.all(),
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return render(request, 'comments_partial.html', context)
 
@@ -300,6 +352,34 @@ def zapros(request):
     result = User.objects.filter(Q(first_name__icontains=zapros,) | Q(last_name__icontains = zapros))
     context = {
         'zapros':zapros,
-        'result': result
+        'result': result,
+        'all_available_posts': Post.objects.all(),
+        'all_users': User.objects.all(),
+        'all_videos': Video_item.objects.all()
     }
     return render(request, 'zapros.html', context)
+
+
+def check_mess(request, mess_id):
+    mess = Message.objects.get(id = mess_id)
+    conversation = mess.conversation
+    all_messages = conversation.messages.all()
+    # User.objects.filter(userprofile__level__gte=0)
+    all_new_mess = all_messages.filter(id__gt = int(mess_id))
+    if len(all_new_mess)  == 0:
+        return HttpResponse('no new mess')
+    else:
+        response = []
+        for new_mess in all_new_mess:
+            message = {}
+            message['name'] = (f'{new_mess.poster.first_name} {new_mess.poster.last_name}'),
+            message['avatar'] = (str(new_mess.poster.avatar)),
+            message['message'] = (new_mess.content),
+            message['time'] = (new_mess.created_at.strftime('%b %d, %I:%M%p')),
+            message['poster_id'] = (f'{new_mess.poster.id}')
+            response.append(message)
+       
+        return HttpResponse(json.dumps(response))
+
+        
+    

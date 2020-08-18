@@ -91,6 +91,7 @@ $('body').on('click','.unlike',function(e){
     let path = $(this).attr('href')
     var this_var = $(this)
     var needed_html = $(this).html()
+    var post_id = $(this).attr('post_id')
     if(needed_html == 'Unlike'){
         $(this).html('Like')
     }else{
@@ -99,15 +100,88 @@ $('body').on('click','.unlike',function(e){
     $.ajax({
         url:path,
         method:'get',
-        success: function(response)
-{
+        success: function(response){
+            console.log(response);
             this_var.attr('href',  this_var.attr('href2'))
             this_var.attr('href2', path)
-            $('.likess').html(response)
+            $(`.${post_id}`).html(response)
+        }
+    })
+})
+$('body').on('submit','.chat_form',function(e){
+    e.preventDefault()
+    var thisForm = $(this);
+    var conversation=$(this).attr('conversation')
+    var receiver=$(this).attr('receiver')
+    $.ajax({
+        url: `/chat/${conversation}/${receiver}`,
+        data: $(this).serialize(),
+        method:'post',
+        success: (response) => {
+            response = JSON.parse(response)
+            $('.last').attr('class', "chat_message_container")
+            $('#chat_container').append(
+                `<div class="chat_message_container last" mess_id ="{{message.id}}">
+                    <div class="chat_message">
+                        <div class="chat_avatar">
+                            <a href="/user/${response.poster_id}/profile" ><img src="/media/${response.avatar}" alt=""></a>
+                        </div>
+                        <div class="chat_content_container">
+                            <div class="chat_content_header">
+                                <a href="/user/${response.poster_id}/profile">${response.name}</a>
+                                <small>${response.time}</small>
+                            </div>
+                            <div class="chat_content_body">
+                                <p>${response.message}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+            )
+            thisForm[0].reset();
+            updateScroll()
         }
     })
 })
 
+// Ajax check for new messages
+function check_for_mess(){
+    var mess_id = $('.last').attr('mess_id')
+    $.ajax({
+        url: `/check_mess/${mess_id}`,
+        method:'get',
+        success: function(response){
+            console.log(response);
+            response = JSON.parse(response)
+            for(mess in response){
+                $('.last').attr('class', "chat_message_container")
+                $('#chat_container').append(
+                    `<div class="chat_message_container last" mess_id ="{{message.id}}">
+                        <div class="chat_message">
+                            <div class="chat_avatar">
+                                <a href="/user/${mess.poster_id}/profile" ><img src="/media/${mess.avatar}" alt=""></a>
+                            </div>
+                            <div class="chat_content_container">
+                                <div class="chat_content_header">
+                                    <a href="/user/${mess.poster_id}/profile">${mess.name}</a>
+                                    <small>${mess.time}</small>
+                                </div>
+                                <div class="chat_content_body">
+                                    <p>${mess.message}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+                )
+                updateScroll()
+            }
+        }
+    })
+}
+
+window.setInterval(function(){
+    check_for_mess()
+}, 1000);
 
 // Delete post comment
 $('body').on('click','#delete_com',function(e){

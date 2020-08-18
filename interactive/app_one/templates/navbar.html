@@ -3,6 +3,7 @@
         <ul>
             {% if request.session.user_id != null %}
             <li><a href="/user/{{ request.session.user_id }}/profile"><ion-icon name="home"></ion-icon>My Profile</a></li>
+            <li><a href="/update_profile/{{ request.session.user_id}}"><ion-icon name="person"></ion-icon>Edit Profle</a></li>
             <li><a href="/dashboard"><ion-icon name="desktop"></ion-icon>News</a></li>
             <li>
                 <a href="/messages"><ion-icon name="chatbubbles"></ion-icon>Messages

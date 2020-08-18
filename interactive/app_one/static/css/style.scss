@@ -1,6 +1,7 @@
 $button_color: #17a2b8;
 // $button_color: #4177b1;
 $teal_opacity:#93d4de3d;
+$teal_opacity2:#93d4de;
 $bg_color:rgb(238, 238, 238);
 $white: #fff;
 $black:rgb(0, 0, 0);
@@ -94,6 +95,7 @@ a{
                     }
                     .search_bar1_btn{
                         padding: 0;
+                        border: 1px solid $white;
                         font-size: 12px;
                         padding: 2px 6px;
                         letter-spacing: 0.4px;
@@ -250,6 +252,9 @@ a{
             padding: 0;
         }
     }
+    .user_post_song_container{
+        padding: 0 10px;
+    }
 
     .like{
         display: flex;
@@ -362,6 +367,7 @@ a{
     text-align: right;
     li{
         margin-top: 10px;
+        margin-bottom: 30px;
         a{
             font-size: 14px;
             color: $button_color;
@@ -400,6 +406,45 @@ a{
                 ion-icon {
                     color: rgb(150, 26, 26);
                 }
+            }
+        }
+    }
+    .ads{
+        .users_add{
+            width: 90%;
+            height: 110px;
+            padding: 10px 0 10px;
+            background-color: $white;
+            color: $teal_opacity2;
+            // color: $grey;
+            text-align: center;
+            margin-left: 20px;
+            p{
+                font-size: 18px; 
+                margin-top: 5px;
+                margin-bottom: 10px;
+            }
+
+            ion-icon {
+               font-size: 42px;
+            }
+        }
+        .users_add_2{
+            width: 90%;
+            height: 110px;
+            padding: 10px 0 10px;
+            background-color: $teal_opacity2;
+            color: $white;
+            text-align: center;
+            margin-left: 20px;
+            p{
+                font-size: 18px; 
+                margin-top: 5px;
+                margin-bottom: 10px;
+            }
+
+            ion-icon {
+               font-size: 42px;
             }
         }
     }
@@ -785,19 +830,11 @@ label{
 
 
 // Music
-.music_container{
-    padding: 10px;
-    text-align: center;
-    .player-box{
-        padding: 10px;
-        small{
-            padding-left: 10px;
-        }
-        audio{
-            text-align: center;
-        }
+.users_music_container{
+    padding: 10px 20px;
+    small{
+        padding-left: 10px;
     }
-
 }
 
 

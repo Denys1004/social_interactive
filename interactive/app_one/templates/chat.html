@@ -22,7 +22,11 @@
 
                         <div id="chat_container">
                             {% for message in conversation.messages.all %}
+                                {% if forloop.counter == conversation.messages.all|length %}
+                                <div class="chat_message_container last" mess_id ="{{message.id}}">
+                                {% else%}
                                 <div class="chat_message_container">
+                                {% endif %}
                                     <div class="chat_message">
                                         <div class="chat_avatar">
                                             <a href="/user/{{ message.poster.id }}/profile" ><img src="{{ MEDIA_URL }}{{ message.poster.avatar }}" alt=""></a>
@@ -41,7 +45,7 @@
                             {% endfor %}
                         </div>
                         <div class="chat_form_container">
-                            <form action="/chat/{{conversation.id}}/{{receiver.id}}" method="post" class="chat_form">
+                            <form action="/chat/{{conversation.id}}/{{receiver.id}}" method="post" conversation='{{conversation.id}}' receiver='{{receiver.id}}' class="chat_form">
                                 {% csrf_token %}
                                 <textarea name="content" id="content" rows="3"></textarea>
                                 <div class="emoji_container">
