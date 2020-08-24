@@ -20,16 +20,13 @@ urlpatterns = [
     path('like/<int:post_id>', views.add_like),
     path('unlike/<int:post_id>', views.remove_like),
 
-    path('add_comment/post/<int:post_id>', views.add_comment),
     path('post_comment', views.post_comment_with_ajax),
     path('delete/comment/<int:comment_id>', views.delete_comment),
 
     #messages
     path('messages', views.display_messages),
-    path('send_to/<int:user_id>', views.send_message),
     path('chat/<int:conv_id>/<int:receiver_id>', views.chat),
-
     path('check_mess/<int:mess_id>', views.check_mess),
-
+    
     path('logout', views.logout)
 ]

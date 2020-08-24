@@ -5,7 +5,7 @@
     {% include 'head.html' %}
     <title>Profile</title>
 </head>
-<body>
+<body onload="on_chat_load()">
     <div class="outer_container">
         {% include 'search.html' %}
 
@@ -20,7 +20,7 @@
                         </div>
 
 
-                        <div id="chat_container">
+                        <div id="chat_container" onload="updateScroll()">
                             {% for message in conversation.messages.all %}
                                 {% if forloop.counter == conversation.messages.all|length %}
                                 <div class="chat_message_container last" mess_id ="{{message.id}}">
@@ -71,5 +71,6 @@
         </div>
     {% include 'footer.html' %}
     </div>
+
 </body>
 </html>

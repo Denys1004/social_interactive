@@ -1,17 +1,4 @@
-// $('#color_teal').click(function(){
-//     let css_1_Path = $('#css_style').attr('href'); 
-//     $('#css_style').attr('href', css_1_Path)
-// })
-
-// $('#color_blue').click(function(){
-//     let css_2_Path = $('#css_style').attr('alt_src2');
-//     $('#css_style').attr('href', css_2_Path)
-// })
-
-
-
-
-// Show Form for submitt post
+// Show Form for submit post
 $('#image_post_btn').click(function(){
     $('#video_post').hide();
     $('#text_post').hide();
@@ -67,7 +54,6 @@ $(".comment_container").on('submit', '.comment_form', function(e){
     })
 })
 
-
 // Show Comments on the post
 $('.show_comments').click(function(){
     let pContent=$(this).html()
@@ -82,8 +68,6 @@ $('.show_comments').click(function(){
         $(`.${post_id}display`).show()
     }
 })
-
-
 
 // Likes
 $('body').on('click','.unlike',function(e){
@@ -121,7 +105,7 @@ $('body').on('submit','.chat_form',function(e){
             response = JSON.parse(response)
             $('.last').attr('class', "chat_message_container")
             $('#chat_container').append(
-                `<div class="chat_message_container last" mess_id ="{{message.id}}">
+                `<div class="chat_message_container last" mess_id =${response.message_id}>
                     <div class="chat_message">
                         <div class="chat_avatar">
                             <a href="/user/${response.poster_id}/profile" ><img src="/media/${response.avatar}" alt=""></a>
@@ -145,39 +129,33 @@ $('body').on('submit','.chat_form',function(e){
 })
 
 // Ajax check for new messages
-// $('body').on('submit','.chat_form',function(e){
 function check_for_mess(){
     var mess_id = $('.last').attr('mess_id')
-    // console.log(mess_id);
+    console.log(mess_id);
+    
+    if(typeof(mess_id) == 'undefined'){return(false)}      
     $.ajax({
         url: `/check_mess/${mess_id}`,
         method:'get',
-        async: false,
         success: function(response){
+            if(response.length == 0){return true}
             response = JSON.parse(response)
-
+            console.log(response);
             for(mess of response){
-                var name = mess['name'][0]
-                var avatar = mess['avatar'][0]
-                var message = mess['message'][0]
-                var time = mess['time'][0]
-                var poster_id = mess['poster_id']
-                var mess_id = mess['mess_id']
-
                 $('.last').attr('class', "chat_message_container")
                 $('#chat_container').append(
-                    `<div class="chat_message_container last" mess_id =${mess_id}>
+                    `<div class="chat_message_container last" mess_id =${mess.mess_id}>
                         <div class="chat_message">
                             <div class="chat_avatar">
-                                <a href="/user/${poster_id}/profile" ><img src="/media/${avatar}" alt=""></a>
+                                <a href="/user/${mess['poster_id']}/profile" ><img src="/media/${mess['avatar']}" alt=""></a>
                             </div>
                             <div class="chat_content_container">
                                 <div class="chat_content_header">
-                                    <a href="/user/${poster_id}/profile">${name}</a>
-                                    <small>${time}</small>
+                                    <a href="/user/${mess['poster_id']}/profile">${mess['name']}</a>
+                                    <small>${mess['time']}</small>
                                 </div>
                                 <div class="chat_content_body">
-                                    <p>${message}</p>
+                                    <p>${mess['message']}</p>
                                 </div>
                             </div>
                         </div>
@@ -187,11 +165,16 @@ function check_for_mess(){
             }
         }
     })
+    return true
 }
-
-window.setInterval(function(){
-    check_for_mess()
-}, 1000);
+function on_chat_load()
+{
+    init_emoji()
+    window.setInterval(function(){
+        status=check_for_mess()
+        if (!status){return}
+    }, 1000);
+}
 
 // Delete post comment
 $('body').on('click','#delete_com',function(e){
@@ -206,36 +189,23 @@ $('body').on('click','#delete_com',function(e){
     })
 })
 
-
 // Chat keep scrolled down
 function updateScroll(){
     var element = document.getElementById("chat_container");
     element.scrollTop = element.scrollHeight;
 }
-updateScroll()
-
-
 
 // Emoji
-var input = document.querySelector('#content');
-var emoji_btn = document.querySelector('#add_emoji');
-var picker = new EmojiButton({
-    position: 'right-end' 
-})
-picker.on('emoji', function(emoji){
-    input.value += emoji;
-})
-emoji_btn.addEventListener('click', function(){
-    picker.pickerVisible ? picker.hidePicker() : picker.showPicker(emoji_btn);
-})
-
-
-
-// [{
-//     "name": ["Veta Romanchenko"], 
-//     "avatar": ["avatars/veta.jpg-32411016f1194067905bc758b1dd819f.jpg"], 
-//     "message": ["dsgfgsdf"], 
-//     "time": ["Aug 18, 02:43AM"], 
-//     "poster_id": "2"
-// }]
-
+function init_emoji(){
+    var input = document.querySelector('#content');
+    var emoji_btn = document.querySelector('#add_emoji');
+    var picker = new EmojiButton({
+        position: 'right-end' 
+    })
+    picker.on('emoji', function(emoji){
+        input.value += emoji;
+    })
+    emoji_btn.addEventListener('click', function(){
+        picker.pickerVisible ? picker.hidePicker() : picker.showPicker(emoji_btn);
+    })
+}
