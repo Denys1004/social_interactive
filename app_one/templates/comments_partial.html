@@ -1,0 +1,21 @@
+{% for comment in current_post_comments %}
+<div class="display_comment">
+    <div class="comment_poster_photo">
+        <a href="/user/{{ comment.poster.id }}/profile/"><img src="{{ MEDIA_URL }}{{ comment.poster.avatar }}" alt=""></a>
+    </div>
+    <div class="comment_content">
+        <div class="comment_content_header">
+            <a class="comment_poster" href="/user/{{ comment.poster.id }}/profile/">{{ comment.poster.first_name }} {{ comment.poster.last_name }}</a>
+            {% if comment.poster.id == cur_user.id %}
+            <div class="delete_comment_btn">
+                <a id="delete_com" href="/delete/comment/{{comment.id}}/">Delete</a>
+            </div>
+            {% endif %}
+        </div>
+        <p class="comment_text">{{ comment.comment }}</p>
+        <small>{{ comment.created_at }}</small>
+    </div>
+</div>
+<hr>
+{% endfor %}
+

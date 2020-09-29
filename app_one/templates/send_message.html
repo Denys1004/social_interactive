@@ -1,0 +1,49 @@
+{% load embed_video_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Send Message</title>
+</head>
+<body>
+    <div class="outer_container">
+        {% include 'search.html' %}
+
+        <div class="inner_container">
+            <div class="inner">
+                {% include 'navbar.html' %}
+                <div class="main_container">
+                    <div class="page_title_container">
+                        <h4>Send message to:</h4>
+                    </div>
+                    <div class="message_to_container">
+                        <div class="message_to_header">
+                            <div class="message_to_avatar">
+                                <a href="/user/{{ receiver.id }}/profile/" ><img src="{{ MEDIA_URL }}{{ receiver.avatar }}" alt="{{ post.poster.first_name}}'s avatar"></a>
+                            </div>
+                            <div class="message_to_name">
+                                <a href="/user/{{ receiver.id }}/profile/" class="poster_name">{{ receiver.first_name }} {{ receiver.last_name }}</a>
+                            </div>
+                        </div>
+                        <div class="send_first_message_form">
+                            <form action="/send_to/{{receiver.id}}/" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="content">Message:</label>
+                                    <input type="text" name="content" class="form-control" id="content">
+                                </div>
+                                <button class="mybutton btn btn-info">Send</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+    
+ 
+    
+                {% include 'sidebar.html' %}
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </div>
+</body>
+</html>

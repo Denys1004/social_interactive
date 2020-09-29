@@ -1,0 +1,26 @@
+<div id="search_bar_container">
+    <div id="search_bar">
+        <div class="logo_container">
+            <a href="/dashboard/"><h1 class="logotip">int</h1></a>
+        </div>
+        <div class="form_search_container">
+            <div class="form_items">
+                <form action="/search/" method="GET" class="form-inline">
+                    {% csrf_token %}
+                    <input class="search_bar1" type="search" name="results">
+                    <button class="btn btn-outline-light search_bar1_btn" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+        <div class="current_user_container">
+            {% if request.session.user_id != null %}
+            <div class="cur_user_name_container">
+                <p><a href="/user/{{ cur_user.id }}/profile/">{{ cur_user.first_name }}</a></p>
+            </div>
+            <div class="cur_user_photo_container">   
+                <a href="/user/{{ cur_user.id }}/profile/"><img src="{{ MEDIA_URL }}{{ cur_user.avatar }}" alt="avatar"></a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

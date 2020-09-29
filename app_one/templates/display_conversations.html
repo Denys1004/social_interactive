@@ -1,0 +1,63 @@
+{% load embed_video_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Conversations</title>
+</head>
+<body>
+    <div class="outer_container">
+        {% include 'search.html' %}
+
+        <div class="inner_container">
+            <div class="inner">
+                {% include 'navbar.html' %}
+    
+                <div class="message_container">
+                    <div class="main_container">
+                        <div class="page_title_container">
+                            <h4>Messages</h4>
+                        </div>
+                        {% if not cur_user.conversations.all %}
+                        <p class="no_provided text-center">{{ cur_user.first_name }} doesn't have any messages</p>
+                        {% endif %}
+                        <div class="conversation_container">
+                            {% for conversation in conversations %}
+  
+                                {% for friend in conversation.users.all %}
+                                    {% if friend.id != cur_user.id %}
+                                    <div class="post_header">
+                                        <div class="friend_avatar">
+                                            <a href="/chat/{{ conversation.id }}/{{friend.id}}/" ><img src="{{ MEDIA_URL }}{{ friend.avatar }}" alt="{{ friend.first_name}}'s avatar"></a>
+                                        </div>
+                                        <div class="poster">
+                                            <div class="friend_info">
+                                                <a href="/chat/{{ conversation.id }}/{{friend.id}}/" class="poster_name">{{ friend.first_name }} {{ friend.last_name }}</a>
+                                                <small>{{ conversation.messages.last.created_at }}</small>
+                                            </div>
+                                            <div class="last_message">
+                                                <small>{{ conversation.title|slice:":30" }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif%}
+                                   
+                                {% endfor %}
+                                <hr>
+                                
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+    
+                {% include 'sidebar.html' %}
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </div>
+</body>
+</html>

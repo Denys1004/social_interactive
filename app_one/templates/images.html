@@ -1,0 +1,43 @@
+{% load embed_video_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Images</title>
+</head>
+<body>
+    <div class="outer_container">
+        {% include 'search.html' %}
+
+        <div class="inner_container">
+            <div class="inner">
+                {% include 'navbar.html' %}
+    
+                <div class="main_container">
+                    <div class="page_title_container">
+                        <h4>My Images</h4>
+                    </div>
+
+                    <div class="my_image_container">
+                        <div class="tz-gallery">
+                            {% for eachpost in cur_user.poster.all %}
+                                {% if eachpost.post_image %}
+                                <div class="image_box">
+                                    <a class="lightbox" href="{{ MEDIA_URL }}{{ eachpost.post_image }}">
+                                        <img class="all_images" src="{{ MEDIA_URL }}{{ eachpost.post_image }}" alt="">
+                                    </a>
+                                </div>
+                                {% endif%}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+    
+                {% include 'sidebar.html' %}
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,63 @@
+{% load embed_video_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Music</title>
+</head>
+<body>
+    <div class="outer_container">
+        {% include 'search.html' %}
+
+        <div class="inner_container">
+            <div class="inner">
+                {% include 'navbar.html' %}
+    
+                <div class="main_container">
+                    <div class="page_title_container">
+                        <h4>My Songs</h4>
+                    </div>
+                
+                    <div class="users_music_container">
+                        {% for eachpost in cur_user.poster.all %}
+                            {% if eachpost.post_song %}
+                                <div class="player-box">
+                                    <small>{{ eachpost.content|slice:":20"}}</small>
+                                    <audio controls>
+                                        <source src="{{ MEDIA_URL }}{{ eachpost.post_song }}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                                <hr>
+                            {% endif%}
+                        {% endfor %}
+                    </div>
+
+                    <div class="page_title_container">
+                        <h4>Music</h4>
+                    </div>
+                    <div class="users_music_container">
+                        {% for eachpost in all_posts %}
+                            {% if eachpost.post_song %}
+                                <div class="player-box">
+                                    <small>{{ eachpost.content|slice:":20"}}</small>
+                                    <audio controls>
+                                        <source src="{{ MEDIA_URL }}{{ eachpost.post_song }}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                
+                                </div>
+                                <hr>
+                            {% endif%}
+                        {% endfor %}
+                    </div>
+    
+                </div>
+    
+                {% include 'sidebar.html' %}
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </div>
+</body>
+</html>

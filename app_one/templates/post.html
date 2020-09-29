@@ -1,0 +1,83 @@
+{% for post in posts %}
+<div class="post_container">
+    <div class="post_header">
+        <div class="avatar">
+            <a href="/user/{{ post.poster.id }}/profile" ><img src="{{ MEDIA_URL }}{{ post.poster.avatar }}" alt="{{ post.poster.first_name}}'s avatar"></a>
+        </div>
+        <div class="poster">
+            <a href="/user/{{ post.poster.id }}/profile" class="poster_name">{{ post.poster.first_name }} {{ post.poster.last_name }}</a>
+            <small>{{ post.created_at }}</small>
+        </div>
+    </div>
+
+    {% if post.title %}
+        <h3 class="post_title">{{ post.title }}</h3>
+    {% endif %}
+    <p class="post_content">{{ post.content|safe }}</p>
+
+    <!-- if post has video, display this: -->
+    {% for i in post.videos.all %}
+    <div class="one_video_container">			
+        {% video i.video '520x300' %}		
+    </div>
+    {% endfor %}
+
+    <!-- if post has an image, display this: -->
+    {% if post.post_image %}
+    <div class="post_image_container">
+        <img src="{{ MEDIA_URL }}{{ post.post_image }}" alt="">
+    </div>
+    {% endif %}
+
+    <div class="like">
+        <p class="likess">{{mess.likes.count}} 100</p>
+        <ion-icon name="heart"></ion-icon>
+        {% if cur_user in mess.likes.all %}
+        <a id="unlike" post_id='{{post.id}}' href="unlike/{{post.id}}/">Unlike</a>
+        {% else %}
+        <a id="like" post_id='{{post.id}}' href="like/{{post.id}}/">Like</a>
+        {% endif %}
+    </div>
+
+
+    <div class="comment_container">
+        <div class="comment_form_container">
+            <form action="/add_comment/post/{{ post.id }}/" class="comment_form" method="POST" post_id="{{post.id}}">
+                {% csrf_token %}
+                <div class="comment_input">
+                    <div class="add_comment_input">
+                        <input type="text" name="comment" placeholder="write a comment">
+                    </div>
+                    <input type="hidden" name="post_id" value="{{post.id}}">
+                    <button class="btn btn-outline-info btn_add" >Add</button>
+                </div>
+            </form>
+        </div>
+
+
+        <!-- if post has comments show this: -->
+        {% if post.comments.all %}
+        <p post_id="{{post.id}}" class="show_comments {{post.id}}paragraph">Show comments...</p>
+        {% endif %}
+
+        <div class="display_comments_container {{post.id}}display">
+            {% for comment in post.comments.all %}
+            <div class="display_comment">
+                <div class="comment_poster_photo">
+                    <a href="/user/{{ comment.poster.id }}/profile/"><img src="{{ MEDIA_URL }}{{ comment.poster.avatar }}" alt=""></a>
+                </div>
+                <div class="comment_content">
+                    <a class="comment_poster" href="/user/{{ comment.poster.id }}/profile/">{{ comment.poster.first_name }} {{ comment.poster.last_name }}</a>
+                    <p class="comment_text">{{ comment.comment }}</p>
+                    <small>{{ comment.created_at }}</small>
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+
+
+
+    </div>
+</div>
+{% endfor %}

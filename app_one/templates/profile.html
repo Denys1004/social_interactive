@@ -1,0 +1,280 @@
+{% load embed_video_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'head.html' %}
+    <title>Profile</title>
+</head>
+<body>
+    <div class="outer_container">
+        {% include 'search.html' %}
+
+        <div class="inner_container">
+            <div class="inner">
+                {% include 'navbar.html' %}
+    
+                <div class="main_container">
+                    <div class="page_title_container">
+                        <h4>{{user.first_name}}'s profile</h4>
+                    </div>
+                    
+                    <div class="profile_page_container">
+                        <div class="avatar_img">
+                            <div class="box">
+
+                                <div class="tz-gallery">
+                                    <a class="lightbox" href="{{ MEDIA_URL }}{{ user.avatar }}">
+                                        <img src="{{ MEDIA_URL }}{{ user.avatar }}" class="image" alt="{{ post.poster.first_name}}'s avatar">
+                                    </a>
+                                </div>
+                                {% if cur_user.id != user.id %}
+                                <a href="/send_to/{{user.id}}/" class="send_mess_btn">Send Message</a>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="profile_info">
+                                <h4>{{ user.first_name }} {{ user.last_name }}</h4>
+                                {% if user.birth_date %}
+                                <p>Birthday: {{ user.birth_date }}</p>
+                                {% endif %}
+                                <p>Email: {{ user.email}}</p>
+                                {% if user.phone_num %}
+                                <p>Phone: {{ user.phone_num}}</p>
+                                {% endif %}
+                                {% if user.id == cur_user.id %}
+                                <div class="update_profile_btn_container">
+                                    <a href="/update_profile/{{ user.id }}/" class="update_profile_btn">Edit Profile</a>
+                                </div>
+                                {% endif%}
+                            </div>
+                        </div>
+                        <div class="about_user">
+                            <h4>About:</h4>
+                            {% if user.about|length > 0 %}
+                            <p>{{ user.about}}</p>
+                            {% else %}
+                            <p class="no_provided">No provided information</p>
+                            {% endif %}
+                        </div>
+                        
+                        {% if user.id == request.session.user_id %}
+                            <div id="user_post_info">
+                                <div class="avatar">
+                                    <a href="/user/{{ user.id }}/profile/"><img src="{{ MEDIA_URL }}{{ user.avatar }}" alt="{{ post.poster.first_name}}'s avatar"></a>
+                                </div>
+                                <div class="which_form">
+                                    <p id ='text_post_btn'>Add Text Post</p>
+                                    <p class="devider"> | </p>
+                                    <p id ='image_post_btn'>Add Image Post</p>
+                                    <p class="devider"> | </p>
+                                    <p id ='video_post_btn'>Add Video Post</p>
+                                    <p class="devider"> | </p>
+                                    <p id ='song_post_btn'>Add Music Post</p>
+                                </div>
+                            </div>
+
+                            <!-- text_post -->
+                            <div id="text_post">
+                                <form action="/create_post/text/" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <textarea name="editor1" class="form-control post_content"></textarea>
+                                    </div>
+                                    <div class="buttons_container">
+                                        <button class="btn btn-outline-info">Post</button>
+                                        <div class="cancel_post">
+                                            <a href="/user/{{ user.id }}/profile/" class="btn btn-info">Cancel</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                    
+                            <!-- image_post -->
+                            <div id="image_post">
+                                <form action="/create_post/image/" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="content">Description:</label>
+                                        <input type="text" name="content" class="form-control" class="post_content">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="files">Image:</label>
+                                        <input type="file" id="files" class="form-control" name="files">
+                                    </div>
+                                    <div class="buttons_container">
+                                        <button class="btn btn-outline-info">Post</button>
+                                        <div class="cancel_post">
+                                            <a href="/user/{{ user.id }}/profile/" class="btn btn-info">Cancel</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- music_post -->
+                            <div id="music_post">
+                                <form action="/create_post/music/" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="content">Title:</label>
+                                        <input type="text" name="content" class="form-control" class="post_content">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="song">mp3 file:</label>
+                                        <input type="file" name="song" id="song" class="form-control" accept=".mp3">
+                                    </div>
+                                    <div class="buttons_container">
+                                        <button class="btn btn-outline-info">Post</button>
+                                        <div class="cancel_post">
+                                            <a href="/user/{{ user.id }}/profile/" class="btn btn-info">Cancel</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- video_post -->
+                            <div id="video_post">
+                                <form action="/create_post/video/" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="content">Description:</label>
+                                        <input type="text" name="content" class="form-control" class="post_content" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="video_item">Video link:</label>
+                                        <input type="url" name="video_item" class="form-control" id="video_item">
+                                    </div>
+                                    <div class="buttons_container">
+                                        <button class="btn btn-outline-info">Post</button>
+                                        <div class="cancel_post">
+                                            <a href="/user/{{ user.id }}/profile/" class="btn btn-info">Cancel</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        {% endif %}
+                
+                        <br>
+                        <h4 class="text-center">All {{user.first_name}}'s Posts</h4>
+                        <!-- if user doesn't have posts display this:-->
+                        {% if not user.poster.all  %}
+                        <p class="no_provided text-center">{{ user.first_name }} doesn't have posts yet</p>
+                        {% endif %}
+                        
+                        {% for post in user_posts %}
+                            <div class="post_container">
+                                <div class="post_header">
+                                    <div class="avatar">
+                                        <a href="/user/{{ post.poster.id }}/profile/" ><img src="{{ MEDIA_URL }}{{ post.poster.avatar }}" alt="{{ post.poster.first_name}}'s avatar"></a>
+                                    </div>
+                                    <div class="poster">
+                                        <a href="/user/{{ post.poster.id }}/profile/" class="poster_name">{{ post.poster.first_name }} {{ post.poster.last_name }}</a>
+                                        <small>{{ post.created_at }}</small>
+                                    </div>
+                                    {% if post.poster.id == cur_user.id %}
+                                    <div class="delete_post_btn">
+                                        <a href="/delete/post/{{post.id}}/">Delete</a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                {% if post.title %}
+                                    <h3 class="post_title">{{ post.title }}</h3>
+                                {% endif %}
+                                <p class="post_content">{{ post.content|safe }}</p>
+
+                                <!-- if post has video, display this: -->
+                                {% for i in post.videos.all %}
+                                <div class="one_video_container">			
+                                    {% video i.video '520x300' %}		
+                                </div>
+                                {% endfor %}
+
+                                <!-- if post has an image, display this: -->
+                                {% if post.post_image %}
+                                <div class="post_image_container">
+                                    <div class="tz-gallery">
+                                        <div class="image_box">
+                                            <a class="lightbox" href="{{ MEDIA_URL }}{{ post.post_image }}">
+                                                <img class="all_images" src="{{ MEDIA_URL }}{{ post.post_image }}" alt="">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <!-- if post has an music, display this: -->
+                                {% if post.post_song %}
+                                <div class="post_song_container">
+                                    <div class="player-box">
+                                        <audio controls>
+                                            <source src="{{ MEDIA_URL }}{{ post.post_song }}" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <!-- create like -->
+                                <div class="like">
+                                    <p class="{{post.id}} likess">{{post.likes.count}}</p>
+                                    <ion-icon name="heart"></ion-icon>
+                                    {% if cur_user in post.likes.all %}
+                                    <a class="unlike" post_id='{{post.id}}' href="/unlike/{{post.id}}/" href2="/like/{{post.id}}/">Unlike</a>
+                                    {% else %}
+                                    <a class="unlike" post_id='{{post.id}}' href="/like/{{post.id}}/" href2="/unlike/{{post.id}}/">Like</a>
+                                    {% endif %}
+                                </div>
+                    
+                                <div class="comment_container">
+                                    <div class="comment_form_container">
+                                        <form action="/add_comment/post/{{ post.id }}/" class="comment_form" method="POST" post_id="{{post.id}}">
+                                            {% csrf_token %}
+                                            <div class="comment_input">
+                                                <div class="add_comment_input">
+                                                    <input type="text" name="comment" placeholder="write a comment">
+                                                </div>
+                                                <input type="hidden" name="post_id" value="{{post.id}}">
+                                                <button class="btn btn-outline-info btn_add" >Add</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- if post has comments show this: -->
+                                    {% if post.comments.all %}
+                                    <p post_id="{{post.id}}" class="show_comments {{post.id}}paragraph">Show comments...</p>
+                                    {% endif %}
+
+                                    <div class="display_comments_container {{post.id}}display">
+                                        {% for comment in post.comments.all %}
+                                        <div class="display_comment">
+                                            <div class="comment_poster_photo">
+                                                <a href="/user/{{ comment.poster.id }}/profile/"><img src="{{ MEDIA_URL }}{{ comment.poster.avatar }}" alt=""></a>
+                                            </div>
+                                            <div class="comment_content">
+                                                <a class="comment_poster" href="/user/{{ comment.poster.id }}/profile/">{{ comment.poster.first_name }} {{ comment.poster.last_name }}</a>
+                                                <p class="comment_text">{{ comment.comment }}</p>
+                                                <small>{{ comment.created_at }}</small>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                </div>
+    
+                {% include 'sidebar.html' %}
+            </div>
+        </div>
+    {% include 'footer.html' %}
+    </div>
+    <script>
+        {
+            CKEDITOR.replace( 'editor1' );
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+
+<div id="sidebar_container">
+    <ul>
+        <li>
+            {% if request.session.user_id != null %}
+            <a href="/logout/">Logout <ion-icon name="arrow-undo"></ion-icon></a>
+            {% else %}
+            <a href="/login/">Login</a>
+            {% endif %}
+        </li>  
+        <!-- <li>
+            <div class="colors_css">
+                <p id="color_teal"><ion-icon name="ellipse"></ion-icon></p>
+                <p id="color_blue"><ion-icon name="ellipse"></ion-icon></p>
+                <p id="color_green"><ion-icon name="ellipse"></ion-icon></p>
+                <p id="color_red"><ion-icon name="ellipse"></ion-icon></p>
+            </div>
+        </li> -->
+    </ul>
+    <div class="ads">
+        <div class="users_add">
+            <p>{{ all_users.count }} Members</p>
+            <div class="users_add_icon">
+                <ion-icon name="people"></ion-icon>
+            </div>
+        </div>
+        <div class="users_add_2">
+            <p>{{ all_available_posts.count }} Posts</p>
+            <div class="users_add_icon">
+                <ion-icon name="newspaper"></ion-icon>
+            </div>
+        </div>
+        <div class="users_add">
+            <p>{{ all_videos.count }} Videos</p>
+            <div class="users_add_icon">
+                <ion-icon name="film"></ion-icon>
+            </div>
+        </div>
+    </div>
+</div>

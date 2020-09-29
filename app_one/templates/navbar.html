@@ -1,0 +1,28 @@
+<div id="navigation">
+    <nav>
+        <ul>
+            {% if request.session.user_id != null %}
+            <li><a href="/user/{{ request.session.user_id }}/profile/"><ion-icon name="home"></ion-icon>My Profile</a></li>
+            <li><a href="/update_profile/{{ request.session.user_id}}/"><ion-icon name="person"></ion-icon>Edit Profle</a></li>
+            <li><a href="/dashboard/"><ion-icon name="desktop"></ion-icon>News</a></li>
+            <li>
+                <a href="/messages/"><ion-icon name="chatbubbles"></ion-icon>Messages
+                    {% if cur_user.has_message %}
+                    <span id="mess_count">{{ cur_user.has_message }}</span>
+                    <!-- <ion-icon class="icon_new_message" name="mail-unread-outline"></ion-icon> -->
+                    {% endif %}
+                </a>
+            </li>
+
+            <li><a href="/images/"><ion-icon name="camera"></ion-icon>Images</a></li>
+            <li><a href="/music/"><ion-icon name="musical-notes"></ion-icon>Music</a></li>
+            <li><a href="/video/"><ion-icon name="film"></ion-icon>Video</a></li>
+            <li><a href="/all_friends/"><ion-icon name="people"></ion-icon>All Users</a></li>
+            <!-- <li>{{ cur_user.has_message }}</li> -->
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+
+
